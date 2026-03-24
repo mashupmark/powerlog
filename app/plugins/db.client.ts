@@ -8,7 +8,7 @@ export default defineNuxtPlugin(() => {
 
   // Sync the local db to the remote one proxied through the "/db" route
   const remoteDBUrl = new URL("/db/logs", window.location.origin).toString();
-  db.sync(remoteDBUrl, { live: true });
+  db.sync(remoteDBUrl, { live: true, retry: true });
 
   return {
     provide: {
