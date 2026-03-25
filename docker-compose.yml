@@ -1,0 +1,33 @@
+services:
+  app:
+    build: .
+    container_name: powerlog
+    ports:
+      - 3000:3000
+    environment:
+      - NUXT_COUCH_DB_URL=http://db:5984/
+      - NUXT_COUCH_DB_USER=admin
+      - NUXT_COUCH_DB_PASSWORD=admin
+
+  db:
+    image: couchdb:3.5.1
+    container_name: powerlog-db
+    ports:
+      - 5984:5984
+    volumes:
+      - powerlog-data:/opt/couchdb/data
+    configs:
+      - source: db_config
+        target: /opt/couchdb/etc/local.ini
+
+configs:
+  db_config:
+    content: |
+      [couchdb]
+      single_node = true
+
+      [admins]
+      admin = admin
+
+volumes:
+  powerlog-data:
