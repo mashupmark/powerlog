@@ -1,11 +1,15 @@
 <script setup lang="ts">
 const { $db } = useNuxtApp();
 
-const { data, addLog } = useDB();
+const { data } = useQuery({
+  selector: {
+    name: "Test Log",
+  },
+});
 </script>
 
 <template>
   Logs:
   <pre>{{ JSON.stringify(data, undefined, 2) }}</pre>
-  <button @click="addLog({ name: 'Test Log' })">Add Log</button>
+  <button @click="$db.post({ name: 'Test Log' })">Add Log</button>
 </template>
