@@ -5,7 +5,11 @@ export const useQuery = (query: PouchDB.Find.FindRequest<Log>) => {
   const { $db } = useNuxtApp();
 
   const { data, refresh } = useAsyncData(async () => {
-    return (await $db.find(query)).docs;
+    try {
+      return (await $db.find(query)).docs;
+    } catch (e) {
+      console.error(e);
+    }
   });
 
   // Listen to changes and sync the ref to them
