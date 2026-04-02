@@ -3,7 +3,8 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
-  modules: ["@vite-pwa/nuxt"],
+  modules: ["@vite-pwa/nuxt", "@sit-onyx/nuxt"],
+  css: ["@fontsource-variable/source-sans-3", "@fontsource-variable/source-code-pro"],
   runtimeConfig: {
     couchDbURL: "",
     couchDbUser: "",
