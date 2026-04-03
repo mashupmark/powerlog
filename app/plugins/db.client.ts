@@ -6,7 +6,7 @@ export type Log = { name: string };
 
 export default defineNuxtPlugin(() => {
   PouchDB.plugin(PouchDBFindPlugin);
-  const db = new PouchDB<Log>("logs");
+  const db = new PouchDB<Log>("logs", { auto_compaction: true });
 
   // Sync the local db to the remote one proxied through the "/db" route
   const remoteDBUrl = new URL("/db/logs", window.location.origin).toString();
