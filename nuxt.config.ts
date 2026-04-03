@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
-  modules: ["@vite-pwa/nuxt", "@sit-onyx/nuxt"],
+  modules: ["@vite-pwa/nuxt", "@sit-onyx/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@pinia/colada-nuxt"],
   css: ["@fontsource-variable/source-sans-3", "@fontsource-variable/source-code-pro"],
   runtimeConfig: {
     couchDbURL: "",
@@ -14,6 +14,15 @@ export default defineNuxtConfig({
     optimizeDeps: {
       include: ["pouchdb"],
     },
+  },
+
+  i18n: {
+    strategy: "no_prefix",
+    defaultLocale: "en-US",
+    locales: [
+      { code: "en-US", name: "English", file: "en-US.json" },
+      { code: "de-DE", name: "Deutsch", file: "de-DE.json" },
+    ],
   },
 
   pwa: {
