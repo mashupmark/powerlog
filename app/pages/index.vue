@@ -23,9 +23,9 @@ const { data, isPending, isLoading, loadNextPage } = useInfiniteQuery({
   initialPageParam: "9999-99-99T99:99:99.999Z", // the first query is based on an impossible large start timestamp
   query: async ({ pageParam }) => {
     const logs = await $db.find({
-      selector: { startedAt: { $lt: pageParam } }, // instead of using "skip" the query uses cursor pagination for better performance
+      selector: { _id: { $lt: pageParam } }, // instead of using "skip" the query uses cursor pagination for better performance
       limit: PAGE_SIZE,
-      sort: [{ startedAt: "desc" }],
+      sort: [{ _id: "desc" }],
     });
     return logs.docs.map((log) => ({
       id: log._id,

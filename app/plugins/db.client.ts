@@ -17,9 +17,6 @@ export default defineNuxtPlugin(async () => {
   const remoteDBUrl = new URL("/db/logs", window.location.origin).toString();
   db.sync(remoteDBUrl, { live: true, retry: true });
 
-  // Index for querying the logs ordered by the time they were started
-  await db.createIndex({ index: { fields: ["startedAt"], ddoc: "startedAtIndex" } });
-
   const queryCache = useQueryCache();
   db.changes({ since: "now", live: true }).on("change", () => queryCache.invalidateQueries());
 
