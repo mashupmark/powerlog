@@ -2,9 +2,9 @@
 import { iconPlus } from "@sit-onyx/icons";
 import { DateTime, Interval } from "luxon";
 import { createFeature, DataGridFeatures, type ColumnConfig } from "sit-onyx";
-import type { Log } from "~/plugins/db.client";
+import type { UnwrapRef } from "vue";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { $db } = useNuxtApp();
 
 const { data: numberOfLogs } = useQuery({
@@ -29,6 +29,7 @@ const { data, isPending, isLoading, loadNextPage } = useInfiniteQuery({
     });
     return logs.docs.map((log) => ({
       id: log._id,
+      date: DateTime.fromISO(log.startedAt).toFormat("ccc dd.MM.yyyy", { locale: locale.value }),
       startedAt: DateTime.fromISO(log.startedAt).toFormat("HH:mm"),
       stoppedAt: DateTime.fromISO(log.stoppedAt).toFormat("HH:mm"),
       duration: Interval.fromDateTimes(DateTime.fromISO(log.startedAt), DateTime.fromISO(log.stoppedAt))
@@ -53,10 +54,12 @@ const tablePagination = DataGridFeatures.usePagination({
   paginationState: paginationState,
 });
 
-const columns = computed<ColumnConfig<Log & { id: string; duration: string }>[]>(() => [
-  { key: "startedAt", type: "string", label: "Start", width: "12ch" },
-  { key: "stoppedAt", type: "string", label: "Stop", width: "12ch" },
-  { key: "duration", type: "string", label: "Duration", width: "16ch" },
+type TableEntry = NonNullable<UnwrapRef<typeof data>>["pages"][number][number];
+const columns = computed<ColumnConfig<TableEntry>[]>(() => [
+  { key: "date", type: "string", label: "Date", width: "minmax(16ch, auto)" },
+  { key: "startedAt", type: "string", label: "Start", width: "minmax(8ch, auto)" },
+  { key: "stoppedAt", type: "string", label: "Stop", width: "minmax(8ch, auto)" },
+  { key: "duration", type: "string", label: "Duration", width: "minmax(8ch, auto)" },
   { key: "customerName", type: "string", label: t("customer") },
   { key: "projectName", type: "string", label: t("project") },
 ]);
@@ -69,7 +72,11 @@ const tableActions = createFeature(() => ({
       icon: iconPlus,
       onClick: async () => {
         const now = DateTime.now();
-        await $db.put({ _id: now.toISO(), startedAt: now.toISO(), stoppedAt: now.plus({ hours: 1 }).toISO() });
+        await $db.put({
+          _id: now.toISO(),
+          startedAt: now.toISO(),
+          stoppedAt: now.plus({ hours: Math.random() * 8, minutes: Math.random() * 60 }).toISO(),
+        });
       },
     },
   ],
