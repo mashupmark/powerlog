@@ -4,6 +4,8 @@ import { DateTime, Interval } from "luxon";
 import { createFeature, DataGridFeatures, type ColumnConfig } from "sit-onyx";
 import type { UnwrapRef } from "vue";
 
+const addLogDialog = useTemplateRef("addLogDialog");
+
 const { t, locale } = useI18n();
 const { $db } = useNuxtApp();
 
@@ -71,12 +73,10 @@ const tableActions = createFeature(() => ({
       label: "New Log",
       icon: iconPlus,
       onClick: async () => {
-        const now = DateTime.now();
-        await $db.put({
-          _id: now.toISO(),
-          startedAt: now.toISO(),
-          stoppedAt: now.plus({ hours: Math.random() * 8, minutes: Math.random() * 60 }).toISO(),
-        });
+        const newLog = await addLogDialog.value?.open();
+        if (!newLog) return;
+
+        await $db.put({ _id: newLog.startedAt, ...newLog });
       },
     },
   ],
@@ -93,6 +93,7 @@ const tableActions = createFeature(() => ({
     :columns
     async
   />
+  <AddLogDialog ref="addLogDialog" />
 </template>
 
 <style scoped>
