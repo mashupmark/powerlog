@@ -46,8 +46,14 @@ defineExpose({ open });
 <template>
   <OnyxModal label="Add Log" nonDismissible :open="isOpen">
     <OnyxForm class="form">
-      <OnyxUnstableDatePickerV2 label="Date" required v-model="date" />
-      <OnyxUnstableTimePicker label="Worktime" type="range" required v-model="time" />
+      <OnyxUnstableDatePickerV2 label="Date" required v-model="date" :popoverOptions="{ fitParent: false }" />
+      <OnyxUnstableTimePicker
+        label="Worktime"
+        type="range"
+        required
+        v-model="time"
+        :popoverOptions="{ fitParent: false }"
+      />
     </OnyxForm>
 
     <template #footer>
@@ -59,9 +65,15 @@ defineExpose({ open });
   </OnyxModal>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use "sit-onyx/breakpoints.scss";
+
 .form {
   padding: 2rem;
-  min-width: 20em;
+  width: 90dvw;
+
+  @include breakpoints.screen(min, sm) {
+    width: 50dvw;
+  }
 }
 </style>
