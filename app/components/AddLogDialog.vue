@@ -5,6 +5,7 @@ import type { Log } from "~/plugins/db.client";
 const isOpen = ref(false);
 const date = ref<Date | undefined>(new Date());
 const time = ref<Interval>();
+const customer = ref<string>();
 
 const isValidTimeRange = computed(() => time.value?.isValid);
 const isValid = computed(() => date.value && time.value && isValidTimeRange.value);
@@ -14,6 +15,7 @@ const open = () => {
   return new Promise<Log | undefined>((res) => {
     date.value = new Date();
     time.value = undefined;
+    customer.value = undefined;
     isOpen.value = true;
 
     close = (log) => {
@@ -23,6 +25,13 @@ const open = () => {
   });
 };
 
+const { data: customers } = useCustomersQuery()
+const options = computed(() => {
+  if(customer.value && !customers.value?.includes(customer.value)) return [...customers.value ?? [], customer.value]
+  return customers.value ?? []
+});
+
+
 const save = () => {
   if (!date.value || !time.value) return;
 
@@ -30,7 +39,7 @@ const save = () => {
   const [startedAt, stoppedAt] = [time.value.start?.toISO(), time.value.end?.toISO()];
 
   if (!startedAt || !stoppedAt) return;
-  close({ startedAt, stoppedAt });
+  close({ startedAt, stoppedAt, customerName: customer.value });
 };
 
 defineExpose({ open });
@@ -54,6 +63,8 @@ defineExpose({ open });
           }
         "
       />
+
+      <AutocompleteDropdown v-model="customer" label="Kunde" listLabel="Kunden" :options />
     </OnyxForm>
 
     <template #footer>

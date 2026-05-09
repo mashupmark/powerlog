@@ -13,6 +13,14 @@ export default defineNuxtPlugin(async () => {
   PouchDB.plugin(PouchDBFindPlugin);
   const db = new PouchDB<Log>("logs", { auto_compaction: true });
 
+  await db.createIndex({
+    index: {
+      ddoc: "customer-projects",
+      fields: ["customerName", "projectName"],
+      partial_filter_selector: { customerName: { $exists: true } },
+    },
+  });
+
   // Sync the local db to the remote one proxied through the "/db" route
   const remoteDBUrl = new URL("/db/logs", window.location.origin).toString();
   db.sync(remoteDBUrl, { live: true, retry: true });
