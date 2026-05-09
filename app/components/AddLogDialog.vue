@@ -1,28 +1,39 @@
 <script setup lang="ts">
 import { DateTime, Interval } from "luxon";
+import type { TimeRange } from "sit-onyx";
 import type { Log } from "~/plugins/db.client";
 
 const isOpen = ref(false);
-const date = ref<Date | undefined>(new Date());
-const time = ref<Interval>();
+const date = ref<Date | undefined>();
+const time = ref<TimeRange>();
 const customer = ref<string>();
 const project = ref<string>();
 
-const isValidTimeRange = computed(() => time.value?.isValid);
-const isValid = computed(() => date.value && time.value && isValidTimeRange.value);
+// Partial type of Log which only contains the fields relevant for this modal
+type PartialLog = Pick<Log, "startedAt" | "stoppedAt" | "customerName" | "projectName">;
 
-let close: (log: Log | undefined) => void;
-const open = () => {
-  return new Promise<Log | undefined>((res) => {
-    date.value = new Date();
-    time.value = undefined;
-    customer.value = undefined;
-    project.value = undefined;
-    isOpen.value = true;
+let close: (log: PartialLog | undefined) => void;
+const open = (initialData?: PartialLog) => {
+  // Initialize / reset all fields before actually opening the modal
+  date.value = initialData ? new Date(initialData.startedAt) : new Date();
+  time.value =
+    initialData?.startedAt && initialData.stoppedAt
+      ? {
+          from: DateTime.fromISO(initialData.startedAt).toFormat("HH:mm"),
+          to: DateTime.fromISO(initialData.stoppedAt).toFormat("HH:mm"),
+        }
+      : undefined;
+  customer.value = initialData?.customerName ?? undefined;
+  project.value = initialData?.projectName ?? undefined;
+  isOpen.value = true;
 
+  return new Promise<PartialLog | undefined>((res) => {
     close = (log) => {
       isOpen.value = false;
-      res(log);
+
+      // If close was called with undefined the modal is supposed to close without saving
+      if (log === undefined) res(undefined);
+      else res({ ...initialData, ...log });
     };
   });
 };
@@ -44,11 +55,19 @@ watch(customer, () => {
   if (customer.value === undefined) project.value = undefined;
 });
 
+// Second version of the currently given time used for validation e.g. checking from is before to
+const timeAsInterval = computed(() => {
+  if (!time.value) return undefined;
+  return Interval.fromDateTimes(DateTime.fromISO(time.value.from), DateTime.fromISO(time.value.to));
+});
+
+const isValid = computed(() => date.value && timeAsInterval.value?.isValid);
+
 const save = () => {
-  if (!date.value || !time.value) return;
+  if (!date.value || !timeAsInterval.value?.isValid) return;
 
   // Create valid iso timestamps out of the given date and timerange
-  const [startedAt, stoppedAt] = [time.value.start?.toISO(), time.value.end?.toISO()];
+  const [startedAt, stoppedAt] = [timeAsInterval.value.start.toISO(), timeAsInterval.value.end.toISO()];
 
   if (!startedAt || !stoppedAt) return;
   close({ startedAt, stoppedAt, customerName: customer.value, projectName: project.value });
@@ -61,19 +80,15 @@ defineExpose({ open });
   <OnyxModal label="Add Log" nonDismissible :open="isOpen">
     <OnyxForm class="form">
       <OnyxUnstableDatePickerV2 label="Date" required v-model="date" :popoverOptions="{ fitParent: false }" />
+
       <OnyxUnstableTimePicker
         label="Worktime"
         type="range"
+        v-model="time"
         required
-        :showError="time && !isValidTimeRange"
+        :showError="time && !timeAsInterval?.isValid"
         error="After needs to be greater than from"
         :popoverOptions="{ fitParent: false }"
-        @update:modelValue="
-          (value) => {
-            if (value === undefined) time = undefined;
-            else time = Interval.fromDateTimes(DateTime.fromISO(value.from), DateTime.fromISO(value.to));
-          }
-        "
       />
 
       <AutocompleteDropdown v-model="customer" label="Kunde" listLabel="Kunden" :options="customerOptions" />
