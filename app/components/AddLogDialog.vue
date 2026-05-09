@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { DateTime } from "luxon";
-import type { TimeRange } from "sit-onyx";
+import { DateTime, Interval } from "luxon";
 import type { Log } from "~/plugins/db.client";
 
 const isOpen = ref(false);
 const date = ref<Date | undefined>(new Date());
-const time = ref<TimeRange>();
+const time = ref<Interval>();
 
-const isValid = computed(() => date.value && time.value);
+const isValidTimeRange = computed(() => time.value?.isValid);
+const isValid = computed(() => date.value && time.value && isValidTimeRange.value);
 
 let close: (log: Log | undefined) => void;
 const open = () => {
@@ -27,14 +27,7 @@ const save = () => {
   if (!date.value || !time.value) return;
 
   // Create valid iso timestamps out of the given date and timerange
-  const [startedAt, stoppedAt] = [time.value.from, time.value.to].map((time) =>
-    DateTime.fromJSDate(date.value!)
-      .set({
-        hour: parseInt(time.split(":")[0] ?? "0"),
-        minute: parseInt(time.split(":")[1] ?? "0"),
-      })
-      .toISO(),
-  );
+  const [startedAt, stoppedAt] = [time.value.start?.toISO(), time.value.end?.toISO()];
 
   if (!startedAt || !stoppedAt) return;
   close({ startedAt, stoppedAt });
@@ -51,8 +44,15 @@ defineExpose({ open });
         label="Worktime"
         type="range"
         required
-        v-model="time"
+        :showError="time && !isValidTimeRange"
+        error="After needs to be greater than from"
         :popoverOptions="{ fitParent: false }"
+        @update:modelValue="
+          (value) => {
+            if (value === undefined) time = undefined;
+            else time = Interval.fromDateTimes(DateTime.fromISO(value.from), DateTime.fromISO(value.to));
+          }
+        "
       />
     </OnyxForm>
 
