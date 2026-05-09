@@ -15,10 +15,19 @@ const { data: numberOfLogs } = useQuery({
 });
 
 const PAGE_SIZE = 25;
-const paginationState = ref<DataGridFeatures.PaginationState>({ current: 1, pageSize: PAGE_SIZE, pages: 0 });
+const paginationState = ref<DataGridFeatures.PaginationState>({
+  current: 1,
+  pageSize: PAGE_SIZE,
+  pages: 0,
+});
 
 // Everytime the number of logs changes the pagination State needs to be updated
-watchEffect(() => (paginationState.value.pages = Math.ceil((numberOfLogs.value ?? 0) / PAGE_SIZE)));
+watchEffect(
+  () =>
+    (paginationState.value.pages = Math.ceil(
+      (numberOfLogs.value ?? 0) / PAGE_SIZE,
+    )),
+);
 
 const { data, isPending, isLoading, loadNextPage } = useInfiniteQuery({
   key: ["logs"],
@@ -31,10 +40,15 @@ const { data, isPending, isLoading, loadNextPage } = useInfiniteQuery({
     });
     return logs.docs.map((log) => ({
       id: log._id,
-      date: DateTime.fromISO(log.startedAt).toFormat("ccc dd.MM.yyyy", { locale: locale.value }),
+      date: DateTime.fromISO(log.startedAt).toFormat("ccc dd.MM.yyyy", {
+        locale: locale.value,
+      }),
       startedAt: DateTime.fromISO(log.startedAt).toFormat("HH:mm"),
       stoppedAt: DateTime.fromISO(log.stoppedAt).toFormat("HH:mm"),
-      duration: Interval.fromDateTimes(DateTime.fromISO(log.startedAt), DateTime.fromISO(log.stoppedAt))
+      duration: Interval.fromDateTimes(
+        DateTime.fromISO(log.startedAt),
+        DateTime.fromISO(log.stoppedAt),
+      )
         .toDuration(["hours", "minutes"])
         .toFormat("h'h'm'm'"),
       customerName: log.customerName,
@@ -59,9 +73,24 @@ const tablePagination = DataGridFeatures.usePagination({
 type TableEntry = NonNullable<UnwrapRef<typeof data>>["pages"][number][number];
 const columns = computed<ColumnConfig<TableEntry>[]>(() => [
   { key: "date", type: "string", label: "Date", width: "minmax(16ch, auto)" },
-  { key: "startedAt", type: "string", label: "Start", width: "minmax(8ch, auto)" },
-  { key: "stoppedAt", type: "string", label: "Stop", width: "minmax(8ch, auto)" },
-  { key: "duration", type: "string", label: "Duration", width: "minmax(8ch, auto)" },
+  {
+    key: "startedAt",
+    type: "string",
+    label: "Start",
+    width: "minmax(8ch, auto)",
+  },
+  {
+    key: "stoppedAt",
+    type: "string",
+    label: "Stop",
+    width: "minmax(8ch, auto)",
+  },
+  {
+    key: "duration",
+    type: "string",
+    label: "Duration",
+    width: "minmax(8ch, auto)",
+  },
   { key: "customerName", type: "string", label: t("customer") },
   { key: "projectName", type: "string", label: t("project") },
 ]);

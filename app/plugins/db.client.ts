@@ -26,7 +26,9 @@ export default defineNuxtPlugin(async () => {
   db.sync(remoteDBUrl, { live: true, retry: true });
 
   const queryCache = useQueryCache();
-  db.changes({ since: "now", live: true }).on("change", () => queryCache.invalidateQueries());
+  db.changes({ since: "now", live: true }).on("change", () =>
+    queryCache.invalidateQueries(),
+  );
 
   return {
     provide: {

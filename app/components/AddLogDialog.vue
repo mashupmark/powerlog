@@ -25,12 +25,11 @@ const open = () => {
   });
 };
 
-const { data: customers } = useCustomersQuery()
+const { data: customers } = useCustomersQuery();
 const options = computed(() => {
-  if(customer.value && !customers.value?.includes(customer.value)) return [...customers.value ?? [], customer.value]
-  return customers.value ?? []
+  if (customer.value && !customers.value?.includes(customer.value)) return [...(customers.value ?? []), customer.value];
+  return customers.value ?? [];
 });
-
 
 const save = () => {
   if (!date.value || !time.value) return;

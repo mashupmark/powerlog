@@ -1,1 +1,5 @@
-{ "customer": "Kunde", "log": "Zeitbuchung | Zeitbuchungen", "project": "Projekt" }
+{
+  "customer": "Kunde",
+  "log": "Zeitbuchung | Zeitbuchungen",
+  "project": "Projekt"
+}
