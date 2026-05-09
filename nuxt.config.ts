@@ -45,4 +45,8 @@ export default defineNuxtConfig({
       routes: ["/"],
     },
   },
+
+  experimental: {
+    viteEnvironmentApi: true,
+  },
 });

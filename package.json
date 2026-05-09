@@ -12,26 +12,26 @@
   "dependencies": {
     "@fontsource-variable/source-code-pro": "5.2.7",
     "@fontsource-variable/source-sans-3": "5.2.9",
-    "@nuxtjs/i18n": "10.2.4",
-    "@pinia/colada": "1.1.0",
-    "@pinia/colada-nuxt": "0.3.2",
+    "@nuxtjs/i18n": "10.3.0",
+    "@pinia/colada": "1.2.0",
+    "@pinia/colada-nuxt": "1.0.0",
     "@pinia/nuxt": "0.11.3",
-    "@sit-onyx/icons": "1.8.0",
+    "@sit-onyx/icons": "1.9.0",
     "@sit-onyx/nuxt": "1.0.1",
     "@vite-pwa/nuxt": "1.1.1",
-    "luxon": "3.7.1",
-    "nuxt": "4.4.2",
+    "luxon": "3.7.2",
+    "nuxt": "4.4.4",
     "pouchdb": "9.0.0",
     "pouchdb-find": "9.0.0",
     "sit-onyx": "1.12.0",
-    "vue": "3.5.31",
-    "vue-router": "5.0.4"
+    "vue": "3.5.34",
+    "vue-router": "5.0.6"
   },
   "devDependencies": {
     "@types/luxon": "3.7.1",
     "@types/pouchdb": "6.4.2",
-    "prettier": "3.8.1",
+    "prettier": "3.8.3",
     "sass-embedded": "^1.99.0"
   },
-  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
+  "packageManager": "pnpm@11.0.9+sha512.34ce82e6780233cf9cad8685029a8f81d2e06196c5a9bad98879f7424940c6817c4e4524fb7d38b8553ceed48b9758b8ebaf1abd3600c232c4c8cf7366086f38"
 }

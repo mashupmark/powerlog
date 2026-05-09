@@ -1,1 +1,3 @@
 minimumReleaseAge: 4320 # Only allow at least 3 days old packages to be installed
+allowBuilds:
+  esbuild: true
