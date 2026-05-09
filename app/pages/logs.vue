@@ -6,7 +6,7 @@ import type { UnwrapRef } from "vue";
 
 const addLogDialog = useTemplateRef("addLogDialog");
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const { $db } = useNuxtApp();
 
 const { data: numberOfLogs } = useQuery({
@@ -22,41 +22,9 @@ const paginationState = ref<DataGridFeatures.PaginationState>({
 });
 
 // Everytime the number of logs changes the pagination State needs to be updated
-watchEffect(
-  () =>
-    (paginationState.value.pages = Math.ceil(
-      (numberOfLogs.value ?? 0) / PAGE_SIZE,
-    )),
-);
+watchEffect(() => (paginationState.value.pages = Math.ceil((numberOfLogs.value ?? 0) / PAGE_SIZE)));
 
-const { data, isPending, isLoading, loadNextPage } = useInfiniteQuery({
-  key: ["logs"],
-  initialPageParam: "9999-99-99T99:99:99.999Z", // the first query is based on an impossible large start timestamp
-  query: async ({ pageParam }) => {
-    const logs = await $db.find({
-      selector: { _id: { $lt: pageParam } }, // instead of using "skip" the query uses cursor pagination for better performance
-      limit: PAGE_SIZE,
-      sort: [{ _id: "desc" }],
-    });
-    return logs.docs.map((log) => ({
-      id: log._id,
-      date: DateTime.fromISO(log.startedAt).toFormat("ccc dd.MM.yyyy", {
-        locale: locale.value,
-      }),
-      startedAt: DateTime.fromISO(log.startedAt).toFormat("HH:mm"),
-      stoppedAt: DateTime.fromISO(log.stoppedAt).toFormat("HH:mm"),
-      duration: Interval.fromDateTimes(
-        DateTime.fromISO(log.startedAt),
-        DateTime.fromISO(log.stoppedAt),
-      )
-        .toDuration(["hours", "minutes"])
-        .toFormat("h'h'm'm'"),
-      customerName: log.customerName,
-      projectName: log.projectName,
-    }));
-  },
-  getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
-});
+const { data, isPending, isLoading, loadNextPage } = useLogsInfiniteQuery({ pageSize: PAGE_SIZE });
 
 // Fetch the next page if the current page changes
 watch(
