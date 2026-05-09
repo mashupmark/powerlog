@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt typecheck && nuxt build",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
     "format": "prettier --write .",
@@ -31,7 +31,9 @@
     "@types/luxon": "3.7.1",
     "@types/pouchdb": "6.4.2",
     "prettier": "3.8.3",
-    "sass-embedded": "^1.99.0"
+    "sass-embedded": "^1.99.0",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.2.8"
   },
   "packageManager": "pnpm@11.0.9+sha512.34ce82e6780233cf9cad8685029a8f81d2e06196c5a9bad98879f7424940c6817c4e4524fb7d38b8553ceed48b9758b8ebaf1abd3600c232c4c8cf7366086f38"
 }
