@@ -6,6 +6,7 @@ const isOpen = ref(false);
 const date = ref<Date | undefined>(new Date());
 const time = ref<Interval>();
 const customer = ref<string>();
+const project = ref<string>();
 
 const isValidTimeRange = computed(() => time.value?.isValid);
 const isValid = computed(() => date.value && time.value && isValidTimeRange.value);
@@ -16,6 +17,7 @@ const open = () => {
     date.value = new Date();
     time.value = undefined;
     customer.value = undefined;
+    project.value = undefined;
     isOpen.value = true;
 
     close = (log) => {
@@ -26,9 +28,20 @@ const open = () => {
 };
 
 const { data: customers } = useCustomersQuery();
-const options = computed(() => {
+const customerOptions = computed(() => {
   if (customer.value && !customers.value?.includes(customer.value)) return [...(customers.value ?? []), customer.value];
   return customers.value ?? [];
+});
+
+const { data: projects } = useCustomerProjectsQuery(customer);
+const projectOptions = computed(() => {
+  if (project.value && !projects.value?.includes(project.value)) return [...(projects.value ?? []), project.value];
+  return projects.value ?? [];
+});
+
+// Clear project field if the customer is cleared since there shouldn't be a project without a customer
+watch(customer, () => {
+  if (customer.value === undefined) project.value = undefined;
 });
 
 const save = () => {
@@ -38,7 +51,7 @@ const save = () => {
   const [startedAt, stoppedAt] = [time.value.start?.toISO(), time.value.end?.toISO()];
 
   if (!startedAt || !stoppedAt) return;
-  close({ startedAt, stoppedAt, customerName: customer.value });
+  close({ startedAt, stoppedAt, customerName: customer.value, projectName: project.value });
 };
 
 defineExpose({ open });
@@ -63,7 +76,14 @@ defineExpose({ open });
         "
       />
 
-      <AutocompleteDropdown v-model="customer" label="Kunde" listLabel="Kunden" :options />
+      <AutocompleteDropdown v-model="customer" label="Kunde" listLabel="Kunden" :options="customerOptions" />
+      <AutocompleteDropdown
+        v-if="customer"
+        v-model="project"
+        label="Projekt"
+        listLabel="Projekte"
+        :options="projectOptions"
+      />
     </OnyxForm>
 
     <template #footer>
