@@ -8,7 +8,6 @@ export const useCustomerProjectsQuery = (customer: MaybeRef<string | undefined>)
       const projects = await $db.find({
         fields: ["projectName"],
         selector: { customerName: unref(customer), projectName: { $exists: true } },
-        use_index: "customer-projects",
       });
       return Array.from(new Set(projects.docs.map(({ projectName }) => projectName!)));
     },

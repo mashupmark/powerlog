@@ -6,12 +6,9 @@ export const useCustomersQuery = () => {
     query: async () => {
       const customers = await $db.find({
         fields: ["customerName"],
-        selector: {},
-        use_index: "customer-projects",
+        selector: { customerName: { $exists: true } },
       });
-      return Array.from(
-        new Set(customers.docs.map(({ customerName }) => customerName!)),
-      );
+      return Array.from(new Set(customers.docs.map(({ customerName }) => customerName!)));
     },
   });
 };
