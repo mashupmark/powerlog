@@ -31,7 +31,7 @@ importers:
         version: 1.8.0
       '@sit-onyx/nuxt':
         specifier: 1.0.1
-        version: 1.0.1(sit-onyx@1.11.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2)))
+        version: 1.0.1(sit-onyx@1.12.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2)))
       '@vite-pwa/nuxt':
         specifier: 1.1.1
         version: 1.1.1(magicast@0.5.2)(vite@7.3.1(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.0)(yaml@2.8.2))(workbox-build@7.4.0)(workbox-window@7.4.0)
@@ -48,8 +48,8 @@ importers:
         specifier: 9.0.0
         version: 9.0.0
       sit-onyx:
-        specifier: 1.11.0
-        version: 1.11.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2))
+        specifier: 1.12.0
+        version: 1.12.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2))
       vue:
         specifier: 3.5.31
         version: 3.5.31(typescript@6.0.2)
@@ -4947,11 +4947,11 @@ packages:
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
-  sit-onyx@1.11.0:
-    resolution: {integrity: sha512-jTwP81vdfhufv05uTPBr95d82UB712Qh0U44VWXya3H4ToGDP9J2Ngr7qsswOe/lpvVomnenZqSXD/O72pFQQw==}
+  sit-onyx@1.12.0:
+    resolution: {integrity: sha512-JZ2y4Q6d3PGtoRVzPPgsc/3p36F4y1G4N8ZfLkbFakVw7bHcY5IqsMD2zlXVqJoVuRsZCLmC4E7m4ljHbNatmw==}
     engines: {node: '>=20'}
     peerDependencies:
-      '@sit-onyx/icons': ^1.8.0
+      '@sit-onyx/icons': ^1.9.0
       typescript: '>= 5.2.2'
       vue: '>= 3.5.0'
 
@@ -7821,9 +7821,9 @@ snapshots:
 
   '@sit-onyx/icons@1.8.0': {}
 
-  '@sit-onyx/nuxt@1.0.1(sit-onyx@1.11.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2)))':
+  '@sit-onyx/nuxt@1.0.1(sit-onyx@1.12.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2)))':
     dependencies:
-      sit-onyx: 1.11.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2))
+      sit-onyx: 1.12.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2))
 
   '@speed-highlight/core@1.2.14': {}
 
@@ -11082,7 +11082,7 @@ snapshots:
 
   sisteransi@1.0.5: {}
 
-  sit-onyx@1.11.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2)):
+  sit-onyx@1.12.0(@sit-onyx/icons@1.8.0)(typescript@6.0.2)(vue@3.5.31(typescript@6.0.2)):
     dependencies:
       '@sit-onyx/icons': 1.8.0
       typescript: 6.0.2
