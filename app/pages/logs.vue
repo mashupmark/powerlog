@@ -11,7 +11,7 @@ import {
 } from "sit-onyx";
 import type { UnwrapRef } from "vue";
 
-const addLogDialog = useTemplateRef("addLogDialog");
+const logDialog = useTemplateRef("logDialog");
 
 const { t, locale } = useI18n();
 const { $db } = useNuxtApp();
@@ -89,7 +89,7 @@ const tableActions = createFeature(() => ({
       label: "New Log",
       icon: iconPlus,
       onClick: async () => {
-        const newLog = await addLogDialog.value?.open();
+        const newLog = await logDialog.value?.open();
         if (!newLog) return;
 
         // Only insert fields which are expected to avoid extra data in the schema less db
@@ -129,7 +129,7 @@ const tableActions = createFeature(() => ({
             icon: iconEdit,
             label: "Edit log",
             onClick: async () => {
-              const updatedLog = await addLogDialog.value?.open(row);
+              const updatedLog = await logDialog.value?.open(row);
               if (updatedLog !== undefined) {
                 // Only update the fields which can be edited by the modal to not add computed fields to the DB
                 await $db.put({
@@ -159,7 +159,7 @@ const tableActions = createFeature(() => ({
     :columns
     async
   />
-  <AddLogDialog ref="addLogDialog" />
+  <LogDialog ref="logDialog" />
 </template>
 
 <style scoped>
