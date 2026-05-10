@@ -92,7 +92,14 @@ const tableActions = createFeature(() => ({
         const newLog = await addLogDialog.value?.open();
         if (!newLog) return;
 
-        await $db.put({ _id: newLog.startedAt, ...newLog });
+        // Only insert fields which are expected to avoid extra data in the schema less db
+        await $db.put({
+          _id: newLog.startedAt,
+          startedAt: newLog.startedAt,
+          stoppedAt: newLog.stoppedAt,
+          customerName: newLog.customerName,
+          projectName: newLog.projectName,
+        });
       },
     },
   ],
