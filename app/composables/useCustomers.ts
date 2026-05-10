@@ -1,10 +1,12 @@
+import type { Log } from "~/plugins/db.client";
+
 export const useCustomersQuery = () => {
   const { $db } = useNuxtApp();
 
   return useQuery({
     key: ["customers"],
     query: async () => {
-      const customers = await $db.find({
+      const customers: PouchDB.Find.FindResponse<Pick<Log, "customerName">> = await $db.find({
         fields: ["customerName"],
         selector: { customerName: { $exists: true } },
       });

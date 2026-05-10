@@ -1,3 +1,5 @@
+import type { Log } from "~/plugins/db.client";
+
 export const useCustomerProjectsQuery = (customer: MaybeRef<string | undefined>) => {
   const { $db } = useNuxtApp();
 
@@ -5,7 +7,7 @@ export const useCustomerProjectsQuery = (customer: MaybeRef<string | undefined>)
     key: () => ["customers", unref(customer) ?? "", "projects"],
     enabled: () => !!unref(customer),
     query: async () => {
-      const projects = await $db.find({
+      const projects: PouchDB.Find.FindResponse<Pick<Log, "projectName">> = await $db.find({
         fields: ["projectName"],
         selector: { customerName: unref(customer), projectName: { $exists: true } },
       });
