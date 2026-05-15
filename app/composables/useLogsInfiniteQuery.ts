@@ -13,6 +13,7 @@ export const useLogsInfiniteQuery = (options: { pageSize: number }) => {
       return logs.docs;
     },
     getNextPageParam: (lastPage) => lastPage.at(-1)?._id,
+    refetchOnMount: true,
   });
 
   return { ...queryResult, data: computed(() => queryResult.data.value?.pages.flat() ?? []) };
