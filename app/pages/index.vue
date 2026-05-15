@@ -63,7 +63,7 @@ const stopLogging = async () => {
     </ProjectCard>
 
     <OnyxHeadline :id="recentProjectsId" is="h2" class="recent-projects__headline">Recent projects</OnyxHeadline>
-    <div class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
+    <div v-if="recentProjects?.length" class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
       <!-- Show the 5 most recent projects -->
       <ProjectCard
         v-for="project in recentProjects?.slice(0, 5)"
@@ -75,6 +75,7 @@ const stopLogging = async () => {
         @stopClick="stopLogging()"
       />
     </div>
+    <OnyxEmpty v-else class="recent-projects__empty">No projects have been used in the past week</OnyxEmpty>
   </div>
 </template>
 
@@ -101,6 +102,10 @@ const stopLogging = async () => {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+    }
+
+    &__empty {
+      margin: 0 auto;
     }
   }
 }
