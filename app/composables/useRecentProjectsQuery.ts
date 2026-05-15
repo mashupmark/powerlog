@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import type { Log } from "~/plugins/db.client";
 
 export const useRecentProjectsQuery = () => {
@@ -8,9 +9,13 @@ export const useRecentProjectsQuery = () => {
     query: async () => {
       const response: PouchDB.Find.FindResponse<Pick<Log, "customerName" | "projectName">> = await $db.find({
         fields: ["customerName", "projectName"],
-        selector: { customerName: { $exists: true }, projectName: { $exists: true } },
+        selector: {
+          _id: { $gt: DateTime.now().minus({ weeks: 1 }).toUTC().toISO() },
+          customerName: { $exists: true },
+          projectName: { $exists: true },
+        },
         sort: [{ _id: "desc" }],
-        limit: 10,
+        limit: Infinity,
       });
 
       const deduplicatedProjects = response.docs.filter((log, index, array) => {
