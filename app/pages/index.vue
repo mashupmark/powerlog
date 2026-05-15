@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { DateTime, Interval } from "luxon";
+
 const recentProjectsId = useId();
 const { $db } = useNuxtApp();
 
@@ -11,6 +13,19 @@ const isCurrentLog = (recentProject: { customerName?: string; projectName?: stri
     currentLog.value?.projectName === recentProject.projectName
   );
 };
+
+const currentDateTime = shallowRef(DateTime.now());
+watchEffect(() => {
+  const interval = setInterval(() => (currentDateTime.value = DateTime.now()), 1_000);
+  onWatcherCleanup(() => clearInterval(interval));
+});
+
+const workingTime = computed(() => {
+  if (currentLog.value === undefined) return;
+  return Interval.fromDateTimes(DateTime.fromISO(currentLog.value.startedAt), currentDateTime.value)
+    .toDuration(["hours", "minutes", "seconds"])
+    .toFormat("h'h'm'm's's'");
+});
 
 const startLogging = (initalOptions?: { customerName?: string; projectName?: string }) => {
   currentLog.value = {
@@ -36,10 +51,22 @@ const stopLogging = async () => {
 
 <template>
   <div class="home">
-    <OnyxHeadline :id="recentProjectsId" class="home__recent-projects-headline" is="h2">Recent projects</OnyxHeadline>
-    <div class="home__recent-projects" role="list" :aria-labelledby="recentProjectsId">
+    <ProjectCard
+      v-if="currentLog !== undefined"
+      class="current-log"
+      :project="currentLog"
+      showStopButton
+      aria-label="Current log"
+      @stopClick="stopLogging()"
+    >
+      <div v-if="workingTime !== undefined" class="current-log__working-time">{{ workingTime }}</div>
+    </ProjectCard>
+
+    <OnyxHeadline :id="recentProjectsId" is="h2" class="recent-projects__headline">Recent projects</OnyxHeadline>
+    <div class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
+      <!-- Show the 5 most recent projects -->
       <ProjectCard
-        v-for="project in recentProjects"
+        v-for="project in recentProjects?.slice(0, 5)"
         :key="`${project.customerName}>${project.projectName}`"
         :project
         :showStopButton="currentLog !== undefined && isCurrentLog(project)"
@@ -61,14 +88,20 @@ const stopLogging = async () => {
     width: 75dvw;
   }
 
-  &__recent-projects-headline {
-    margin-bottom: 0.75rem;
+  .current-log {
+    margin-bottom: 2rem;
   }
 
-  &__recent-projects {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  .recent-projects {
+    &__headline {
+      margin-bottom: 0.5rem;
+    }
+
+    &__list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
   }
 }
 </style>
