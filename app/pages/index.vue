@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { iconMediaPause, iconMediaPlay, iconMediaStop } from "@sit-onyx/icons";
-
 const recentProjectsId = useId();
 const { $db } = useNuxtApp();
 
@@ -37,33 +35,18 @@ const stopLogging = async () => {
 </script>
 
 <template>
-  <div class="recent-projects">
-    <OnyxHeadline :id="recentProjectsId" class="recent-projects__headline" is="h2">Recent projects</OnyxHeadline>
-    <div class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
-      <OnyxCard
+  <div class="home">
+    <OnyxHeadline :id="recentProjectsId" class="home__recent-projects-headline" is="h2">Recent projects</OnyxHeadline>
+    <div class="home__recent-projects" role="list" :aria-labelledby="recentProjectsId">
+      <ProjectCard
         v-for="project in recentProjects"
         :key="`${project.customerName}>${project.projectName}`"
-        class="project-card"
-        role="listitem"
-      >
-        <div class="project-card__customer">{{ project.customerName }}</div>
-        <div class="project-card__project">{{ project.projectName }}</div>
-        <OnyxIconButton
-          v-if="currentLog !== undefined && isCurrentLog(project)"
-          class="project-card__action-button"
-          label="Stop logging"
-          :icon="iconMediaStop"
-          @click="stopLogging()"
-        />
-        <OnyxIconButton
-          v-else
-          class="project-card__action-button"
-          label="Start logging"
-          :icon="iconMediaPlay"
-          :disabled="currentLog !== undefined"
-          @click="startLogging(project)"
-        />
-      </OnyxCard>
+        :project
+        :showStopButton="currentLog !== undefined && isCurrentLog(project)"
+        :disabled="currentLog !== undefined && !isCurrentLog(project)"
+        @startClick="startLogging(project)"
+        @stopClick="stopLogging()"
+      />
     </div>
   </div>
 </template>
@@ -71,45 +54,21 @@ const stopLogging = async () => {
 <style lang="scss" scoped>
 @use "sit-onyx/breakpoints.scss";
 
-.recent-projects {
+.home {
   margin: 0 auto;
 
   @include breakpoints.screen(min, md) {
     width: 75dvw;
   }
 
-  &__headline {
+  &__recent-projects-headline {
     margin-bottom: 0.75rem;
   }
 
-  &__list {
+  &__recent-projects {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-
-    .project-card {
-      display: grid;
-      --onyx-card-gap: 0;
-      grid-template-columns: auto 48px;
-      grid-template-areas:
-        "customer action-button"
-        "project action-button";
-
-      &__customer {
-        grid-area: customer;
-        font-size: var(--onyx-font-size-sm);
-      }
-
-      &__project {
-        grid-area: project;
-        font-size: var(--onyx-font-size-lg);
-        font-weight: 500;
-      }
-
-      &__action-button {
-        grid-area: action-button;
-      }
-    }
   }
 }
 </style>
