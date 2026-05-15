@@ -67,9 +67,18 @@ const save = () => {
   if (!date.value || !timeAsInterval.value?.isValid) return;
 
   // Create valid iso timestamps out of the given date and timerange
-  const [startedAt, stoppedAt] = [timeAsInterval.value.start.toUTC().toISO(), timeAsInterval.value.end.toUTC().toISO()];
+  const start = DateTime.fromJSDate(date.value).set({
+    hour: timeAsInterval.value.start.hour,
+    minute: timeAsInterval.value.start.minute,
+  });
+  const stop = DateTime.fromJSDate(date.value).set({
+    hour: timeAsInterval.value.end.hour,
+    minute: timeAsInterval.value.end.minute,
+  });
 
+  const [startedAt, stoppedAt] = [start.toUTC().toISO(), stop.toUTC().toISO()];
   if (!startedAt || !stoppedAt) return;
+
   close({ startedAt, stoppedAt, customerName: customer.value, projectName: project.value });
 };
 
