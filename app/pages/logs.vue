@@ -131,17 +131,18 @@ const tableActions = createFeature(() => ({
             label: "Edit log",
             onClick: async () => {
               const updatedLog = await logDialog.value?.open(row);
-              if (updatedLog !== undefined) {
-                // Only update the fields which can be edited by the modal to not add computed fields to the DB
-                await $db.put({
-                  _id: row._id,
-                  _rev: row._rev,
-                  startedAt: updatedLog.startedAt,
-                  stoppedAt: updatedLog.stoppedAt,
-                  customerName: updatedLog.customerName,
-                  projectName: updatedLog.projectName,
-                });
-              }
+              if (updatedLog === undefined) return;
+
+              // Instead of updating the existing log a new one is created and the old one deleted
+              // this is done to keep the _id column in tact since it is indexed by default
+              await $db.put({
+                _id: updatedLog.startedAt,
+                startedAt: updatedLog.startedAt,
+                stoppedAt: updatedLog.stoppedAt,
+                customerName: updatedLog.customerName,
+                projectName: updatedLog.projectName,
+              });
+              await $db.remove({ _id: row._id, _rev: row._rev });
             },
           }),
       },
