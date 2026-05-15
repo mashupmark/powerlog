@@ -1,0 +1,27 @@
+import type { Log } from "~/plugins/db.client";
+
+export const useRecentProjectsQuery = () => {
+  const { $db } = useNuxtApp();
+
+  return useQuery({
+    key: () => ["recent-projects"],
+    query: async () => {
+      const response: PouchDB.Find.FindResponse<Pick<Log, "customerName" | "projectName">> = await $db.find({
+        fields: ["customerName", "projectName"],
+        selector: { customerName: { $exists: true }, projectName: { $exists: true } },
+        sort: [{ _id: "desc" }],
+        limit: 10,
+      });
+
+      const deduplicatedProjects = response.docs.filter((log, index, array) => {
+        const indexOfMatchingItem = array.findIndex(
+          ({ customerName, projectName }) => log.customerName === customerName && log.projectName === projectName,
+        );
+        // Only keep the item if it's a new one, otherwise the index of it would be different
+        return index === indexOfMatchingItem;
+      });
+
+      return deduplicatedProjects;
+    },
+  });
+};
