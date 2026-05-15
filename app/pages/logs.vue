@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { iconEdit, iconPlus } from "@sit-onyx/icons";
+import { iconDelete, iconEdit, iconPlus, iconTrash } from "@sit-onyx/icons";
 import { DateTime, Interval } from "luxon";
 import {
   createFeature,
@@ -80,6 +80,7 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
   { key: "customerName", type: "string", label: t("customer") },
   { key: "projectName", type: "string", label: t("project") },
   { key: "id", label: "", type: "editButton", width: "min-content" },
+  { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
 
 const tableActions = createFeature(() => ({
@@ -141,6 +142,18 @@ const tableActions = createFeature(() => ({
                   projectName: updatedLog.projectName,
                 });
               }
+            },
+          }),
+      },
+    }),
+    deleteButton: DataGridFeatures.createTypeRenderer<any, TableEntry>({
+      cell: {
+        component: ({ row }) =>
+          h(OnyxSystemButton, {
+            icon: iconTrash,
+            label: "Delete log",
+            onClick: async () => {
+              await $db.remove(row);
             },
           }),
       },
