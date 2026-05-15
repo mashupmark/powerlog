@@ -9,6 +9,7 @@ export const useCustomersQuery = () => {
       const customers: PouchDB.Find.FindResponse<Pick<Log, "customerName">> = await $db.find({
         fields: ["customerName"],
         selector: { customerName: { $exists: true } },
+        limit: Infinity,
       });
       return Array.from(new Set(customers.docs.map(({ customerName }) => customerName!)));
     },
