@@ -29,7 +29,7 @@ const workingTime = computed(() => {
 
 const startLogging = (initalOptions?: { customerName?: string; projectName?: string }) => {
   currentLog.value = {
-    startedAt: new Date().toISOString(),
+    startedAt: DateTime.now().toUTC().toISO(),
     customerName: initalOptions?.customerName,
     projectName: initalOptions?.projectName,
   };
