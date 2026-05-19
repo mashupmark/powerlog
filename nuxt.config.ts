@@ -3,17 +3,8 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
-  modules: [
-    "@vite-pwa/nuxt",
-    "@sit-onyx/nuxt",
-    "@nuxtjs/i18n",
-    "@pinia/nuxt",
-    "@pinia/colada-nuxt",
-  ],
-  css: [
-    "@fontsource-variable/source-sans-3",
-    "@fontsource-variable/source-code-pro",
-  ],
+  modules: ["@vite-pwa/nuxt", "@sit-onyx/nuxt", "@nuxtjs/i18n", "@pinia/nuxt", "@pinia/colada-nuxt"],
+  css: ["@fontsource-variable/source-sans-3", "@fontsource-variable/source-code-pro"],
   runtimeConfig: {
     couchDbURL: "",
     couchDbUser: "",
@@ -52,6 +43,10 @@ export default defineNuxtConfig({
     prerender: {
       // It's neccessary to prerender the index route so it can be cached for offline access
       routes: ["/"],
+    },
+    routeRules: {
+      // Cache the ics endpoint for 1 minute to reduce backend load
+      "/api/ics": { cache: { swr: false, maxAge: 60 } },
     },
   },
 
