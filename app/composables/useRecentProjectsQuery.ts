@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import type { Log } from "~/plugins/db.client";
+import type { Log } from "~~/shared/db";
 
 export const useRecentProjectsQuery = () => {
   const { $db } = useNuxtApp();

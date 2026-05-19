@@ -1,4 +1,4 @@
-import type { Log } from "~/plugins/db.client";
+import type { Log } from "~~/shared/db";
 
 export const useCustomerProjectsQuery = (customer: MaybeRef<string | undefined>) => {
   const { $db } = useNuxtApp();

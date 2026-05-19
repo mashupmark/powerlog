@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { DateTime, Interval } from "luxon";
 import type { TimeRange } from "sit-onyx";
-import type { Log } from "~/plugins/db.client";
+import type { Log } from "~~/shared/db";
 
 const isOpen = ref(false);
 const date = ref<Date | undefined>();
