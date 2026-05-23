@@ -58,25 +58,10 @@ const tablePagination = DataGridFeatures.usePagination({
 type TableEntry = NonNullable<UnwrapRef<typeof logs>>[number];
 type CustomColumnTypes = ColumnTypesFromFeatures<typeof tableActions>;
 const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColumnTypes>[]>(() => [
-  { key: "date", type: "date", label: "Date", width: "minmax(16ch, auto)" },
-  {
-    key: "startedAt",
-    type: "time",
-    label: "Start",
-    width: "minmax(8ch, auto)",
-  },
-  {
-    key: "stoppedAt",
-    type: "time",
-    label: "Stop",
-    width: "minmax(8ch, auto)",
-  },
-  {
-    key: "duration",
-    type: "string",
-    label: "Duration",
-    width: "minmax(10ch, auto)",
-  },
+  { key: "date", type: "date", label: "Date", width: "16ch" },
+  { key: "startedAt", type: "time", label: "Start", width: "8ch" },
+  { key: "stoppedAt", type: "time", label: "Stop", width: "8ch" },
+  { key: "duration", type: "string", label: "Duration", width: "10ch" },
   { key: "customerName", type: "string", label: t("customer") },
   { key: "projectName", type: "string", label: t("project") },
   { key: "id", label: "", type: "editButton", width: "min-content" },
