@@ -18,29 +18,28 @@ const logs = computed(() =>
   (data.value ?? []).map((log) => ({
     id: log._id,
     date: log.startedAt,
-    duration: Interval.fromDateTimes(DateTime.fromISO(log.startedAt), DateTime.fromISO(log.stoppedAt))
-      .toDuration(["hours", "minutes"])
-      .toFormat("h'h'm'm'"),
+    duration: Interval.fromDateTimes(DateTime.fromISO(log.startedAt), DateTime.fromISO(log.stoppedAt)).toDuration(),
     ...log,
   })),
 );
 
 type TableEntry = UnwrapRef<typeof logs>[number];
-type CustomColumnTypes = ColumnTypesFromFeatures<typeof tableActions>;
+type CustomColumnTypes = ColumnTypesFromFeatures<typeof withCustomActions>;
 const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColumnTypes>[]>(() => [
   { key: "date", type: "date", label: "Date", width: "16ch" },
   { key: "startedAt", type: "time", label: "Start", width: "8ch" },
   { key: "stoppedAt", type: "time", label: "Stop", width: "8ch" },
-  { key: "duration", type: "string", label: "Duration", width: "minmax(10ch, auto)" },
+  { key: "duration", type: "duration", label: "Duration", width: "minmax(10ch, auto)" },
   { key: "id", label: "", type: "editButton", width: "min-content" },
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
 
-const tableActions = createFeature(() => ({
+const withCustomActions = createFeature(() => ({
   name: Symbol("table-actions"),
   typeRenderer: {
     date: dateTypeRenderer(locale),
     time: timeTypeRenderer(),
+    duration: durationRenderer(),
     editButton: buttonRenderer<TableEntry>({
       label: "Edit log",
       icon: iconEdit,
@@ -79,7 +78,7 @@ const tableActions = createFeature(() => ({
   <OnyxDataGrid
     class="data-grid"
     :headline="t('log', 2)"
-    :features="[tableActions]"
+    :features="[withCustomActions]"
     :data="logs"
     :columns
     :skeleton="isLoading"

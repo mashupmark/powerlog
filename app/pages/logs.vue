@@ -35,9 +35,7 @@ const logs = computed(() =>
   (data.value ?? []).map((log) => ({
     id: log._id,
     date: log.startedAt,
-    duration: Interval.fromDateTimes(DateTime.fromISO(log.startedAt), DateTime.fromISO(log.stoppedAt))
-      .toDuration(["hours", "minutes"])
-      .toFormat("h'h'm'm'"),
+    duration: Interval.fromDateTimes(DateTime.fromISO(log.startedAt), DateTime.fromISO(log.stoppedAt)).toDuration(),
     ...log,
   })),
 );
@@ -60,7 +58,7 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
   { key: "date", type: "date", label: "Date", width: "16ch" },
   { key: "startedAt", type: "time", label: "Start", width: "8ch" },
   { key: "stoppedAt", type: "time", label: "Stop", width: "8ch" },
-  { key: "duration", type: "string", label: "Duration", width: "10ch" },
+  { key: "duration", type: "duration", label: "Duration", width: "10ch" },
   { key: "customerName", type: "string", label: t("customer") },
   { key: "projectName", type: "string", label: t("project") },
   { key: "id", label: "", type: "editButton", width: "min-content" },
@@ -91,6 +89,7 @@ const tableActions = createFeature(() => ({
   typeRenderer: {
     date: dateTypeRenderer(locale),
     time: timeTypeRenderer(),
+    duration: durationRenderer(),
     editButton: buttonRenderer<TableEntry>({
       label: "Edit log",
       icon: iconEdit,
