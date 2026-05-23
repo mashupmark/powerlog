@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { iconEdit, iconTrash } from "@sit-onyx/icons";
-import { DateTime, Interval } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 import { createFeature, type ColumnConfig, type ColumnGroupConfig, type ColumnTypesFromFeatures } from "sit-onyx";
 import type { UnwrapRef } from "vue";
 
@@ -22,6 +22,12 @@ const logs = computed(() =>
     ...log,
   })),
 );
+
+const projectDuration = computed(() => {
+  return logs.value.reduce<Duration>((acc, cur) => {
+    return acc.plus(cur.duration);
+  }, Duration.fromMillis(0));
+});
 
 type TableEntry = UnwrapRef<typeof logs>[number];
 type CustomColumnTypes = ColumnTypesFromFeatures<typeof withCustomActions>;
@@ -75,19 +81,37 @@ const withCustomActions = createFeature(() => ({
 </script>
 
 <template>
-  <OnyxDataGrid
-    class="data-grid"
-    :headline="t('log', 2)"
-    :features="[withCustomActions]"
-    :data="logs"
-    :columns
-    :skeleton="isLoading"
-  />
-  <LogDialog ref="logDialog" />
+  <div class="report">
+    <div class="kpis">
+      <KpiCard header="Total time" :value="projectDuration.toFormat(`h'h'm'm'`)" />
+    </div>
+
+    <OnyxDataGrid
+      class="data-grid"
+      :headline="t('log', 2)"
+      :features="[withCustomActions]"
+      :data="logs"
+      :columns
+      :skeleton="isLoading"
+    />
+    <LogDialog ref="logDialog" />
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.data-grid {
-  max-height: 100%;
+.report {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .kpis {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .data-grid {
+    max-height: 100%;
+  }
 }
 </style>
