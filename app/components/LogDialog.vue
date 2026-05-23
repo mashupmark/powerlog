@@ -3,14 +3,17 @@ import { DateTime, Interval } from "luxon";
 import type { TimeRange } from "sit-onyx";
 import type { Log } from "~~/shared/db";
 
+const { t } = useI18n();
+
 const isOpen = ref(false);
 const date = ref<Date | undefined>();
 const time = ref<TimeRange>();
 const customer = ref<string>();
 const project = ref<string>();
+const notes = ref<string>();
 
 // Partial type of Log which only contains the fields relevant for this modal
-type PartialLog = Pick<Log, "startedAt" | "stoppedAt" | "customerName" | "projectName">;
+type PartialLog = Pick<Log, "startedAt" | "stoppedAt" | "customerName" | "projectName" | "notes">;
 
 let close: (log: PartialLog | undefined) => void;
 const open = (initialData?: PartialLog) => {
@@ -25,6 +28,7 @@ const open = (initialData?: PartialLog) => {
       : undefined;
   customer.value = initialData?.customerName ?? undefined;
   project.value = initialData?.projectName ?? undefined;
+  notes.value = initialData?.notes ?? undefined;
   isOpen.value = true;
 
   return new Promise<PartialLog | undefined>((res) => {
@@ -81,7 +85,7 @@ const save = () => {
   const [startedAt, stoppedAt] = [start.toUTC().toISO(), stop.toUTC().toISO()];
   if (!startedAt || !stoppedAt) return;
 
-  close({ startedAt, stoppedAt, customerName: customer.value, projectName: project.value });
+  close({ startedAt, stoppedAt, customerName: customer.value, projectName: project.value, notes: notes.value });
 };
 
 defineExpose({ open });
@@ -111,6 +115,8 @@ defineExpose({ open });
         :options="projectOptions"
         :required="!!customer"
       />
+
+      <OnyxTextarea :label="t('notes')" v-model.trim="notes" />
     </OnyxForm>
 
     <template #footer>

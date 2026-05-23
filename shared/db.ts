@@ -5,4 +5,5 @@ export type Log = {
   stoppedAt: string;
   customerName?: string;
   projectName?: string;
+  notes?: string;
 };

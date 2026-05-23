@@ -33,9 +33,10 @@ type TableEntry = UnwrapRef<typeof logs>[number];
 type CustomColumnTypes = ColumnTypesFromFeatures<typeof withCustomActions>;
 const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColumnTypes>[]>(() => [
   { key: "date", type: "date", label: "Date", width: "16ch" },
-  { key: "startedAt", type: "time", label: "Start", width: "8ch" },
-  { key: "stoppedAt", type: "time", label: "Stop", width: "8ch" },
-  { key: "duration", type: "duration", label: "Duration", width: "minmax(10ch, auto)" },
+  { key: "startedAt", type: "time", label: "Start", width: "10ch" },
+  { key: "stoppedAt", type: "time", label: "Stop", width: "10ch" },
+  { key: "duration", type: "duration", label: "Duration", width: "10ch" },
+  { key: "notes", type: "string", label: t("notes") },
   { key: "id", label: "", type: "editButton", width: "min-content" },
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
@@ -93,6 +94,7 @@ const withCustomActions = createFeature(() => ({
       :data="logs"
       :columns
       :skeleton="isLoading"
+      truncation="ellipsis"
     />
 
     <LogDialog ref="logDialog" />

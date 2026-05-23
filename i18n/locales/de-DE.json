@@ -1,5 +1,6 @@
 {
   "customer": "Kunde",
   "log": "Zeitbuchung | Zeitbuchungen",
-  "project": "Projekt"
+  "project": "Projekt",
+  "notes": "Notizen"
 }

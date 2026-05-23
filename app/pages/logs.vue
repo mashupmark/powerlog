@@ -56,11 +56,12 @@ type TableEntry = NonNullable<UnwrapRef<typeof logs>>[number];
 type CustomColumnTypes = ColumnTypesFromFeatures<typeof tableActions>;
 const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColumnTypes>[]>(() => [
   { key: "date", type: "date", label: "Date", width: "16ch" },
-  { key: "startedAt", type: "time", label: "Start", width: "8ch" },
-  { key: "stoppedAt", type: "time", label: "Stop", width: "8ch" },
+  { key: "startedAt", type: "time", label: "Start", width: "10ch" },
+  { key: "stoppedAt", type: "time", label: "Stop", width: "10ch" },
   { key: "duration", type: "duration", label: "Duration", width: "10ch" },
-  { key: "customerName", type: "string", label: t("customer") },
-  { key: "projectName", type: "string", label: t("project") },
+  { key: "customerName", type: "string", label: t("customer"), width: "min-content" },
+  { key: "projectName", type: "string", label: t("project"), width: "min-content" },
+  { key: "notes", type: "string", label: t("notes") },
   { key: "id", label: "", type: "editButton", width: "min-content" },
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
@@ -82,6 +83,7 @@ const tableActions = createFeature(() => ({
           stoppedAt: newLog.stoppedAt,
           customerName: newLog.customerName,
           projectName: newLog.projectName,
+          notes: newLog.notes,
         });
       },
     },
@@ -107,6 +109,7 @@ const tableActions = createFeature(() => ({
             stoppedAt: updatedLog.stoppedAt,
             customerName: updatedLog.customerName,
             projectName: updatedLog.projectName,
+            notes: updatedLog.notes,
           });
         } catch (e) {
           throw new Error("Failed to replace existing log", { cause: e });
@@ -134,6 +137,7 @@ const tableActions = createFeature(() => ({
       :skeleton="isPending"
       :columns
       async
+      truncation="ellipsis"
     />
     <LogDialog ref="logDialog" />
   </OnyxPageLayout>
