@@ -4,6 +4,7 @@ const props = defineProps<{
   listLabel: string;
   modelValue?: string;
   options: string[];
+  required?: boolean;
 }>();
 
 const emit = defineEmits<{ "update:modelValue": [string | undefined] }>();
@@ -11,14 +12,9 @@ const emit = defineEmits<{ "update:modelValue": [string | undefined] }>();
 const search = ref("");
 
 const options = computed(() => {
-  const filteredOptions = props.options.filter((option) =>
-    option.toLowerCase().includes(search.value.toLowerCase()),
-  );
+  const filteredOptions = props.options.filter((option) => option.toLowerCase().includes(search.value.toLowerCase()));
 
-  if (
-    search.value.trim().length > 0 &&
-    !filteredOptions.includes(search.value.trim())
-  ) {
+  if (search.value.trim().length > 0 && !filteredOptions.includes(search.value.trim())) {
     filteredOptions.unshift(search.value);
   }
 
@@ -34,6 +30,7 @@ const options = computed(() => {
     :listLabel="props.listLabel"
     :options
     withSearch
+    :required="props.required"
     @update:modelValue="emit('update:modelValue', $event ?? undefined)"
   />
 </template>

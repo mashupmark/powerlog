@@ -61,7 +61,9 @@ const timeAsInterval = computed(() => {
   return Interval.fromDateTimes(DateTime.fromISO(time.value.from), DateTime.fromISO(time.value.to));
 });
 
-const isValid = computed(() => date.value && timeAsInterval.value?.isValid);
+const isValid = computed(
+  () => date.value && timeAsInterval.value?.isValid && (!!customer.value ? !!project.value : true),
+);
 
 const save = () => {
   if (!date.value || !timeAsInterval.value?.isValid) return;
@@ -107,6 +109,7 @@ defineExpose({ open });
         label="Projekt"
         listLabel="Projekte"
         :options="projectOptions"
+        :required="!!customer"
       />
     </OnyxForm>
 
