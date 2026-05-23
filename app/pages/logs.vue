@@ -75,7 +75,7 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
     key: "duration",
     type: "string",
     label: "Duration",
-    width: "minmax(8ch, auto)",
+    width: "minmax(10ch, auto)",
   },
   { key: "customerName", type: "string", label: t("customer") },
   { key: "projectName", type: "string", label: t("project") },
