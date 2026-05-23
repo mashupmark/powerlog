@@ -22,9 +22,15 @@ watchEffect(() => {
 
 const workingTime = computed(() => {
   if (currentLog.value === undefined) return;
-  return Interval.fromDateTimes(DateTime.fromISO(currentLog.value.startedAt), currentDateTime.value)
-    .toDuration(["hours", "minutes", "seconds"])
-    .toFormat("h'h'm'm's's'");
+
+  const duration = Interval.fromDateTimes(
+    DateTime.fromISO(currentLog.value.startedAt),
+    currentDateTime.value,
+  ).toDuration();
+
+  // Avoid "invalid duration" to be displayed initially
+  if (!duration.isValid) return;
+  return duration.toFormat("h'h'm'm's's'");
 });
 
 const startLogging = (initalOptions?: { customerName?: string; projectName?: string }) => {
