@@ -4,7 +4,6 @@ import { DateTime, Interval } from "luxon";
 import {
   createFeature,
   DataGridFeatures,
-  OnyxSystemButton,
   type ColumnConfig,
   type ColumnGroupConfig,
   type ColumnTypesFromFeatures,
@@ -90,62 +89,36 @@ const tableActions = createFeature(() => ({
     },
   ],
   typeRenderer: {
-    date: DataGridFeatures.createTypeRenderer<any, TableEntry>({
-      cell: {
-        component: ({ modelValue }) => {
-          if (modelValue === undefined) return undefined;
-          return DateTime.fromISO(modelValue).toFormat("ccc dd.MM.yyyy", {
-            locale: locale.value,
-          });
-        },
-      },
-    }),
-    time: DataGridFeatures.createTypeRenderer<any, TableEntry>({
-      cell: {
-        component: ({ modelValue }) => {
-          if (modelValue === undefined) return undefined;
-          return DateTime.fromISO(modelValue).toFormat("HH:mm");
-        },
-      },
-    }),
-    editButton: DataGridFeatures.createTypeRenderer<any, TableEntry>({
-      cell: {
-        component: ({ row }) =>
-          h(OnyxSystemButton, {
-            icon: iconEdit,
-            label: "Edit log",
-            onClick: async () => {
-              const updatedLog = await logDialog.value?.open(row);
-              if (updatedLog === undefined) return;
+    date: dateTypeRenderer(locale),
+    time: timeTypeRenderer(),
+    editButton: buttonRenderer<TableEntry>({
+      label: "Edit log",
+      icon: iconEdit,
+      onClick: async (row) => {
+        const updatedLog = await logDialog.value?.open(row);
+        if (updatedLog === undefined) return;
 
-              // Instead of updating the existing log a new one is created and the old one deleted
-              // this is done to keep the _id column in tact since it is indexed by default
-              try {
-                await $db.remove({ _id: row._id, _rev: row._rev });
-                await $db.put({
-                  _id: updatedLog.startedAt,
-                  startedAt: updatedLog.startedAt,
-                  stoppedAt: updatedLog.stoppedAt,
-                  customerName: updatedLog.customerName,
-                  projectName: updatedLog.projectName,
-                });
-              } catch (e) {
-                throw new Error("Failed to replace existing log", { cause: e });
-              }
-            },
-          }),
+        // Instead of updating the existing log a new one is created and the old one deleted
+        // this is done to keep the _id column in tact since it is indexed by default
+        try {
+          await $db.remove({ _id: row._id, _rev: row._rev });
+          await $db.put({
+            _id: updatedLog.startedAt,
+            startedAt: updatedLog.startedAt,
+            stoppedAt: updatedLog.stoppedAt,
+            customerName: updatedLog.customerName,
+            projectName: updatedLog.projectName,
+          });
+        } catch (e) {
+          throw new Error("Failed to replace existing log", { cause: e });
+        }
       },
     }),
-    deleteButton: DataGridFeatures.createTypeRenderer<any, TableEntry>({
-      cell: {
-        component: ({ row }) =>
-          h(OnyxSystemButton, {
-            icon: iconTrash,
-            label: "Delete log",
-            onClick: async () => {
-              await $db.remove(row);
-            },
-          }),
+    deleteButton: buttonRenderer<TableEntry>({
+      label: "Delete log",
+      icon: iconTrash,
+      onClick: async (row) => {
+        await $db.remove(row);
       },
     }),
   },
