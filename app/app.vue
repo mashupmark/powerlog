@@ -4,6 +4,7 @@
       <OnyxNavBar appName="PowerLog">
         <OnyxNavItem label="Home" link="/" />
         <OnyxNavItem label="Logs" link="/logs" />
+        <OnyxNavItem label="Reports" link="/reports" />
       </OnyxNavBar>
     </template>
 
