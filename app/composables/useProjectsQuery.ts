@@ -12,7 +12,10 @@ export const useProjectsQuery = () => {
         limit: Infinity,
       })) as PouchDB.Find.FindResponse<Required<Pick<Log, "customerName" | "projectName">>>;
 
-      return logs.docs;
+      // Sorting within the query would require an extra index, so to save space sorting is done as computation
+      return logs.docs.sort(
+        (a, b) => a.customerName.localeCompare(b.customerName) || a.projectName.localeCompare(b.projectName),
+      );
     },
   });
 };
