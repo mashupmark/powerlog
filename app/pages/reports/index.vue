@@ -94,12 +94,14 @@ const withCustomActions = createFeature(() => ({
       :columns
       :skeleton="isLoading"
     />
+
     <LogDialog ref="logDialog" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .report {
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -111,7 +113,7 @@ const withCustomActions = createFeature(() => ({
   }
 
   .data-grid {
-    max-height: 100%;
+    min-height: 0;
   }
 }
 </style>
