@@ -50,7 +50,7 @@ const stopLogging = async () => {
 </script>
 
 <template>
-  <div class="home">
+  <OnyxPageLayout class="home">
     <ProjectCard
       v-if="currentLog !== undefined"
       class="current-log"
@@ -76,7 +76,7 @@ const stopLogging = async () => {
       />
     </div>
     <OnyxEmpty v-else class="recent-projects__empty">No projects have been used in the past week</OnyxEmpty>
-  </div>
+  </OnyxPageLayout>
 </template>
 
 <style lang="scss" scoped>

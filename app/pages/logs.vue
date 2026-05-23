@@ -164,16 +164,18 @@ const tableActions = createFeature(() => ({
 </script>
 
 <template>
-  <OnyxDataGrid
-    class="data-grid"
-    :features="[tablePagination, tableActions]"
-    :data="logs"
-    :headline="t('log', 2)"
-    :skeleton="isPending"
-    :columns
-    async
-  />
-  <LogDialog ref="logDialog" />
+  <OnyxPageLayout>
+    <OnyxDataGrid
+      class="data-grid"
+      :features="[tablePagination, tableActions]"
+      :data="logs"
+      :headline="t('log', 2)"
+      :skeleton="isPending"
+      :columns
+      async
+    />
+    <LogDialog ref="logDialog" />
+  </OnyxPageLayout>
 </template>
 
 <style scoped>

@@ -7,9 +7,7 @@
       </OnyxNavBar>
     </template>
 
-    <OnyxPageLayout>
-      <NuxtPage />
-    </OnyxPageLayout>
+    <NuxtPage />
 
     <NuxtRouteAnnouncer />
   </OnyxAppLayout>
