@@ -182,7 +182,7 @@ const tableActions = createFeature(() => ({
   </OnyxPageLayout>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .data-grid {
   max-height: 100%;
 }
