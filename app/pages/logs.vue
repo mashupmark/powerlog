@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { iconDelete, iconEdit, iconPlus, iconTrash } from "@sit-onyx/icons";
+import { iconEdit, iconPlus, iconTrash } from "@sit-onyx/icons";
 import { DateTime, Interval } from "luxon";
 import {
   createFeature,
@@ -135,14 +135,18 @@ const tableActions = createFeature(() => ({
 
               // Instead of updating the existing log a new one is created and the old one deleted
               // this is done to keep the _id column in tact since it is indexed by default
-              await $db.put({
-                _id: updatedLog.startedAt,
-                startedAt: updatedLog.startedAt,
-                stoppedAt: updatedLog.stoppedAt,
-                customerName: updatedLog.customerName,
-                projectName: updatedLog.projectName,
-              });
-              await $db.remove({ _id: row._id, _rev: row._rev });
+              try {
+                await $db.remove({ _id: row._id, _rev: row._rev });
+                await $db.put({
+                  _id: updatedLog.startedAt,
+                  startedAt: updatedLog.startedAt,
+                  stoppedAt: updatedLog.stoppedAt,
+                  customerName: updatedLog.customerName,
+                  projectName: updatedLog.projectName,
+                });
+              } catch (e) {
+                throw new Error("Failed to replace existing log", { cause: e });
+              }
             },
           }),
       },
