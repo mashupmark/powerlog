@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { iconMediaPlay, iconMediaStop } from "@sit-onyx/icons";
 import { DateTime, Interval } from "luxon";
+
+const logDialog = useTemplateRef("logDialog");
 
 const recentProjectsId = useId();
 const { $db } = useNuxtApp();
@@ -44,12 +47,17 @@ const startLogging = (initalOptions?: { customerName?: string; projectName?: str
 const stopLogging = async () => {
   if (currentLog.value === undefined) return;
 
+  // Open the edit dialog for optional manual changes before saving the log
+  const log = await logDialog.value?.open({ ...currentLog.value, stoppedAt: new Date().toISOString() });
+  if (log === undefined) return; // Don't stop the log if cancel was clicked
+
   await $db.put({
-    _id: currentLog.value.startedAt,
-    startedAt: currentLog.value.startedAt,
-    stoppedAt: new Date().toISOString(),
-    customerName: currentLog.value.customerName,
-    projectName: currentLog.value.projectName,
+    _id: log.startedAt ?? currentLog.value.startedAt,
+    startedAt: log.startedAt ?? currentLog.value.startedAt,
+    stoppedAt: log.stoppedAt ?? new Date().toISOString(),
+    customerName: log.customerName ?? currentLog.value.customerName,
+    projectName: log.projectName ?? currentLog.value.projectName,
+    notes: log.notes,
   });
   currentLog.value = undefined;
 };
@@ -60,7 +68,10 @@ const stopLogging = async () => {
     <ProjectCard
       v-if="currentLog !== undefined"
       class="current-log"
-      :project="currentLog"
+      :project="{
+        customerName: currentLog.customerName ?? 'Unknown customer',
+        projectName: currentLog.projectName ?? 'Unknown project',
+      }"
       showStopButton
       aria-label="Current log"
       @stopClick="stopLogging()"
@@ -82,6 +93,18 @@ const stopLogging = async () => {
       />
     </div>
     <OnyxEmpty v-else class="recent-projects__empty">No projects have been used in the past week</OnyxEmpty>
+
+    <OnyxFAB
+      v-if="currentLog === undefined"
+      class="fab"
+      label="Start new log"
+      hideLabel
+      :icon="iconMediaPlay"
+      @click="startLogging()"
+    />
+    <OnyxFAB v-else class="fab" label="Stop logging" hideLabel :icon="iconMediaStop" @click="stopLogging()" />
+
+    <LogDialog ref="logDialog" />
   </OnyxPageLayout>
 </template>
 
@@ -113,6 +136,11 @@ const stopLogging = async () => {
     &__empty {
       margin: 0 auto;
     }
+  }
+
+  .fab {
+    --onyx-fab-offset-x: 1.5rem;
+    --onyx-fab-offset-y: 1.5rem;
   }
 }
 </style>
