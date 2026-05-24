@@ -85,6 +85,7 @@ const withCustomActions = createFeature(() => ({
   <div class="report">
     <div class="kpis">
       <KpiCard header="Total time" :value="projectDuration.toFormat(`h'h'm'm'`)" />
+      <KpiCard header="Number of logs" :value="logs.length.toString()" />
     </div>
 
     <OnyxDataGrid
