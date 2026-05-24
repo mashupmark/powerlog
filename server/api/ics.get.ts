@@ -1,5 +1,5 @@
 import type { Log } from "~~/shared/db";
-import { createEventsAsync, EventAttributes } from "ics";
+import { createEventsAsync, type EventAttributes } from "ics";
 
 // Custom endpoint publishing all logs in the ics format. The endpoint can be added to e.g. outlook for easy overview.
 export default defineEventHandler(async (event) => {
