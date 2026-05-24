@@ -25,11 +25,45 @@ export default defineNuxtConfig({
     ],
   },
 
+  app: {
+    head: {
+      link: [
+        { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
+        { rel: "icon", href: "/powerlog.svg", sizes: "any", type: "image/svg+xml" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon-180x180.png" },
+      ],
+    },
+  },
+
   pwa: {
     manifest: {
       name: "Powerlog",
       short_name: "Powerlog",
       description: "Easily track your working hours",
+      theme_color: "#00c3cd",
+      icons: [
+        {
+          src: "pwa-64x64.png",
+          sizes: "64x64",
+          type: "image/png",
+        },
+        {
+          src: "pwa-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          src: "pwa-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
+        {
+          src: "maskable-icon-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
+      ],
     },
     registerType: "autoUpdate",
     workbox: {

@@ -1,7 +1,7 @@
 <template>
   <OnyxAppLayout>
     <template #navBar>
-      <OnyxNavBar appName="PowerLog">
+      <OnyxNavBar appName="PowerLog" logoUrl="/powerlog.svg">
         <OnyxNavItem label="Home" link="/" />
         <OnyxNavItem label="Logs" link="/logs" />
         <OnyxNavItem label="Reports" link="/reports" />
@@ -11,6 +11,7 @@
     <NuxtPage />
 
     <NuxtRouteAnnouncer />
+    <NuxtPwaManifest />
   </OnyxAppLayout>
 </template>
 
