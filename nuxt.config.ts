@@ -65,7 +65,11 @@ export default defineNuxtConfig({
         },
       ],
     },
-    registerType: "autoUpdate",
+    registerType: "prompt",
+    client: {
+      // Check for updates every 5min
+      periodicSyncForUpdates: 300,
+    },
     workbox: {
       navigateFallback: "/",
       globPatterns: ["**/*.{js,css,html,json,svg,webp}"],

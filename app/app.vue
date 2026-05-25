@@ -1,3 +1,26 @@
+<script lang="ts" setup>
+import { useToast } from "sit-onyx";
+
+const { $pwa } = useNuxtApp();
+const toast = useToast();
+
+watch(
+  () => $pwa?.needRefresh,
+  (needsRefresh) => {
+    if (needsRefresh) {
+      toast.show({
+        headline: "Update available",
+        description: "Click here to update",
+        duration: 0,
+        clickable: true,
+        onClick: () => $pwa?.updateServiceWorker(true),
+      });
+    }
+  },
+  { immediate: true },
+);
+</script>
+
 <template>
   <OnyxAppLayout>
     <template #navBar>
