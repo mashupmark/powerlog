@@ -61,3 +61,10 @@ configs:
 volumes:
   powerlog-data:
 ```
+
+## Contributing
+
+### Versioning
+
+This repo is versioned using [Changesets](https://changesets.dev), so please add a changeset by running `pnpm changeset add` to your PR before publishing it.
+Describe what you did inside it so it will end up in the changelog during release.
