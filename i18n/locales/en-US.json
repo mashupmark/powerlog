@@ -1,1 +1,6 @@
-{ "customer": "customer", "log": "Log | Logs", "project": "Project", "notes": "Notes" }
+{
+  "customer": "Customer",
+  "log": "Log | Logs",
+  "notes": "Notes",
+  "project": "Project"
+}

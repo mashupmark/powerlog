@@ -69,6 +69,9 @@ importers:
       prettier:
         specifier: 3.8.3
         version: 3.8.3
+      prettier-plugin-sort-json:
+        specifier: ^4.2.0
+        version: 4.2.0(prettier@3.8.3)
       sass-embedded:
         specifier: 1.100.0
         version: 1.100.0
@@ -4769,6 +4772,12 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  prettier-plugin-sort-json@4.2.0:
+    resolution: {integrity: sha512-jK1w3/7otTvHtv1eoLji2U9mEoOGeyl7QQQ/afLnjht1YtRLSUUk8o0rIIC/HUVXhoGPCFe4SVZbRGYjjUVgvA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      prettier: ^3.0.0
 
   prettier@3.8.3:
     resolution: {integrity: sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==}
@@ -11095,6 +11104,10 @@ snapshots:
   powershell-utils@0.1.0: {}
 
   prelude-ls@1.2.1: {}
+
+  prettier-plugin-sort-json@4.2.0(prettier@3.8.3):
+    dependencies:
+      prettier: 3.8.3
 
   prettier@3.8.3: {}
 
