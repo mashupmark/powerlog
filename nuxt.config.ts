@@ -10,11 +10,6 @@ export default defineNuxtConfig({
     couchDbUser: "",
     couchDbPassword: "",
   },
-  vite: {
-    optimizeDeps: {
-      include: ["pouchdb"],
-    },
-  },
 
   i18n: {
     strategy: "no_prefix",
@@ -86,9 +81,5 @@ export default defineNuxtConfig({
       // Cache the ics endpoint for 1 minute to reduce backend load
       "/api/ics": { cache: { swr: false, maxAge: 60 } },
     },
-  },
-
-  experimental: {
-    viteEnvironmentApi: true,
   },
 });
