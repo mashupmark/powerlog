@@ -28,7 +28,7 @@ The recommended way of installation is by using docker. E.g. this is an example 
 ```yaml
 services:
   powerlog:
-    build: .
+    image: ghcr.io/mashupmark/powerlog:latest
     container_name: powerlog
     ports:
       - 3000:3000
