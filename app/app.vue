@@ -2,6 +2,7 @@
 import { useToast } from "sit-onyx";
 
 const { $pwa } = useNuxtApp();
+const { t } = useI18n();
 const toast = useToast();
 
 watch(
@@ -9,8 +10,8 @@ watch(
   (needsRefresh) => {
     if (needsRefresh) {
       toast.show({
-        headline: "Update available",
-        description: "Click here to update",
+        headline: t("updateAvaliable"),
+        description: t("clickToUpdate"),
         duration: 0,
         clickable: true,
         onClick: () => $pwa?.updateServiceWorker(true),
@@ -25,9 +26,9 @@ watch(
   <OnyxAppLayout>
     <template #navBar>
       <OnyxNavBar appName="PowerLog" logoUrl="/powerlog.svg">
-        <OnyxNavItem label="Home" link="/" />
-        <OnyxNavItem label="Logs" link="/logs" />
-        <OnyxNavItem label="Reports" link="/reports" />
+        <OnyxNavItem :label="t('home')" link="/" />
+        <OnyxNavItem :label="t('log', 2)" link="/logs" />
+        <OnyxNavItem :label="t('report', 2)" link="/reports" />
       </OnyxNavBar>
     </template>
 

@@ -32,11 +32,11 @@ const projectDuration = computed(() => {
 type TableEntry = UnwrapRef<typeof logs>[number];
 type CustomColumnTypes = ColumnTypesFromFeatures<typeof withCustomActions>;
 const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColumnTypes>[]>(() => [
-  { key: "date", type: "date", label: "Date", width: "16ch" },
-  { key: "startedAt", type: "time", label: "Start", width: "10ch" },
-  { key: "stoppedAt", type: "time", label: "Stop", width: "10ch" },
-  { key: "duration", type: "duration", label: "Duration", width: "10ch" },
-  { key: "notes", type: "string", label: t("notes") },
+  { key: "date", type: "date", label: t("date"), width: "16ch" },
+  { key: "startedAt", type: "time", label: t("start"), width: "10ch" },
+  { key: "stoppedAt", type: "time", label: t("stop"), width: "10ch" },
+  { key: "duration", type: "duration", label: t("duration"), width: "10ch" },
+  { key: "notes", type: "string", label: t("note", 2) },
   { key: "id", label: "", type: "editButton", width: "min-content" },
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
@@ -48,7 +48,7 @@ const withCustomActions = createFeature(() => ({
     time: timeTypeRenderer(),
     duration: durationRenderer(),
     editButton: buttonRenderer<TableEntry>({
-      label: "Edit log",
+      label: t("editLog"),
       icon: iconEdit,
       onClick: async (row) => {
         const updatedLog = await logDialog.value?.open(row);
@@ -71,7 +71,7 @@ const withCustomActions = createFeature(() => ({
       },
     }),
     deleteButton: buttonRenderer<TableEntry>({
-      label: "Delete log",
+      label: t("deleteLog"),
       icon: iconTrash,
       onClick: async (row) => {
         await $db.remove(row);
@@ -84,8 +84,8 @@ const withCustomActions = createFeature(() => ({
 <template>
   <div class="report">
     <div class="kpis">
-      <KpiCard header="Total time" :value="projectDuration.toFormat(`h'h'm'm'`)" />
-      <KpiCard header="Number of logs" :value="logs.length.toString()" />
+      <KpiCard :header="t('totalTime')" :value="projectDuration.toFormat(`h'h'm'm'`)" />
+      <KpiCard :header="t('numberOfLogs')" :value="logs.length.toString()" />
     </div>
 
     <OnyxDataGrid

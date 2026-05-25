@@ -92,37 +92,42 @@ defineExpose({ open });
 </script>
 
 <template>
-  <OnyxModal label="Add Log" nonDismissible :open="isOpen">
+  <OnyxModal :label="t('addLog')" nonDismissible :open="isOpen">
     <OnyxForm class="form">
-      <OnyxUnstableDatePickerV2 label="Date" required v-model="date" :popoverOptions="{ fitParent: false }" />
+      <OnyxUnstableDatePickerV2 :label="t('date')" required v-model="date" :popoverOptions="{ fitParent: false }" />
 
       <OnyxUnstableTimePicker
-        label="Worktime"
+        :label="t('worktime')"
         type="range"
         v-model="time"
         required
         :showError="time && !timeAsInterval?.isValid"
-        error="After needs to be greater than from"
+        :error="t('invalidInterval')"
         :popoverOptions="{ fitParent: false }"
       />
 
-      <AutocompleteDropdown v-model="customer" label="Kunde" listLabel="Kunden" :options="customerOptions" />
+      <AutocompleteDropdown
+        v-model="customer"
+        :label="t('customer')"
+        :listLabel="t('customer', 2)"
+        :options="customerOptions"
+      />
       <AutocompleteDropdown
         v-if="customer"
         v-model="project"
-        label="Projekt"
-        listLabel="Projekte"
+        :label="t('project')"
+        :listLabel="t('project', 2)"
         :options="projectOptions"
         :required="!!customer"
       />
 
-      <OnyxTextarea :label="t('notes')" v-model.trim="notes" />
+      <OnyxTextarea :label="t('note', 2)" v-model.trim="notes" />
     </OnyxForm>
 
     <template #footer>
       <OnyxBottomBar>
-        <OnyxButton label="Close" color="neutral" mode="plain" @click="close(undefined)" />
-        <OnyxButton label="Save" :disabled="!isValid" @click="save()"></OnyxButton>
+        <OnyxButton :label="t('close')" color="neutral" mode="plain" @click="close(undefined)" />
+        <OnyxButton :label="t('save')" :disabled="!isValid" @click="save()"></OnyxButton>
       </OnyxBottomBar>
     </template>
   </OnyxModal>

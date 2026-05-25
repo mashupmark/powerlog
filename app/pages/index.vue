@@ -5,6 +5,7 @@ import { DateTime, Interval } from "luxon";
 const logDialog = useTemplateRef("logDialog");
 
 const recentProjectsId = useId();
+const { t } = useI18n();
 const { $db } = useNuxtApp();
 
 const currentLog = useCurrentLog();
@@ -69,17 +70,19 @@ const stopLogging = async () => {
       v-if="currentLog !== undefined"
       class="current-log"
       :project="{
-        customerName: currentLog.customerName ?? 'Unknown customer',
-        projectName: currentLog.projectName ?? 'Unknown project',
+        customerName: currentLog.customerName ?? t('unknownCustomer'),
+        projectName: currentLog.projectName ?? t('unknownProject'),
       }"
       showStopButton
-      aria-label="Current log"
+      :aria-label="t('currentLog')"
       @stopClick="stopLogging()"
     >
       <div v-if="workingTime !== undefined" class="current-log__working-time">{{ workingTime }}</div>
     </ProjectCard>
 
-    <OnyxHeadline :id="recentProjectsId" is="h2" class="recent-projects__headline">Recent projects</OnyxHeadline>
+    <OnyxHeadline :id="recentProjectsId" is="h2" class="recent-projects__headline">
+      {{ t("recentProject", 2) }}
+    </OnyxHeadline>
     <div v-if="recentProjects?.length" class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
       <!-- Show the 5 most recent projects -->
       <ProjectCard
@@ -92,17 +95,17 @@ const stopLogging = async () => {
         @stopClick="stopLogging()"
       />
     </div>
-    <OnyxEmpty v-else class="recent-projects__empty">No projects have been used in the past week</OnyxEmpty>
+    <OnyxEmpty v-else class="recent-projects__empty">{{ t("noRecentProjects") }}</OnyxEmpty>
 
     <OnyxFAB
       v-if="currentLog === undefined"
       class="fab"
-      label="Start new log"
+      :label="t('startLogging')"
       hideLabel
       :icon="iconMediaPlay"
       @click="startLogging()"
     />
-    <OnyxFAB v-else class="fab" label="Stop logging" hideLabel :icon="iconMediaStop" @click="stopLogging()" />
+    <OnyxFAB v-else class="fab" :label="t('stopLogging')" hideLabel :icon="iconMediaStop" @click="stopLogging()" />
 
     <LogDialog ref="logDialog" />
   </OnyxPageLayout>

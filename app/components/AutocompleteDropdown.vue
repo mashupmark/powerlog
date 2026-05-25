@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n();
+
 const props = defineProps<{
   label: string;
   listLabel: string;
@@ -18,7 +20,7 @@ const options = computed(() => {
 
   // Display option to create the new value if there isn't already an exact match
   if (search.value.trim().length > 0 && !filteredOptions.some((option) => option.value === search.value)) {
-    filteredOptions.push({ value: search.value, label: `Create: "${search.value}"` });
+    filteredOptions.push({ value: search.value, label: `${t("create")}: "${search.value}"` });
   }
 
   return filteredOptions;

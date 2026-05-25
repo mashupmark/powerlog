@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n();
+
 const { data: projects, isLoading } = useProjectsQuery();
 
 const projectsByCustomer = computed(() =>
@@ -25,8 +27,10 @@ const changeSelection = async (customer: string, project: string) => {
 <template>
   <OnyxPageLayout class="reports">
     <template #sidebar>
-      <OnyxSidebar label="Customers">
-        <template #header><OnyxHeadline is="h3">Customers</OnyxHeadline></template>
+      <OnyxSidebar :label="t('customer', 2)">
+        <template #header>
+          <OnyxHeadline is="h3">{{ t("customer", 2) }}</OnyxHeadline>
+        </template>
 
         <OnyxAccordion :skeleton="isLoading">
           <OnyxAccordionItem v-for="(projects, customer) in projectsByCustomer" :key="customer" :value="customer">
@@ -49,7 +53,7 @@ const changeSelection = async (customer: string, project: string) => {
 
     <NuxtPage v-if="selection" :customer="selection.customer" :project="selection.project" />
     <div v-else class="empty">
-      <OnyxEmpty>Select a project on the left to see the report for it</OnyxEmpty>
+      <OnyxEmpty>{{ t("selectProjectForReport") }}</OnyxEmpty>
     </div>
   </OnyxPageLayout>
 </template>

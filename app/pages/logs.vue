@@ -55,13 +55,13 @@ const tablePagination = DataGridFeatures.usePagination({
 type TableEntry = NonNullable<UnwrapRef<typeof logs>>[number];
 type CustomColumnTypes = ColumnTypesFromFeatures<typeof tableActions>;
 const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColumnTypes>[]>(() => [
-  { key: "date", type: "date", label: "Date", width: "16ch" },
-  { key: "startedAt", type: "time", label: "Start", width: "10ch" },
-  { key: "stoppedAt", type: "time", label: "Stop", width: "10ch" },
-  { key: "duration", type: "duration", label: "Duration", width: "10ch" },
+  { key: "date", type: "date", label: t("date"), width: "16ch" },
+  { key: "startedAt", type: "time", label: t("start"), width: "10ch" },
+  { key: "stoppedAt", type: "time", label: t("stop"), width: "10ch" },
+  { key: "duration", type: "duration", label: t("duration"), width: "10ch" },
   { key: "customerName", type: "string", label: t("customer"), width: "min-content" },
   { key: "projectName", type: "string", label: t("project"), width: "min-content" },
-  { key: "notes", type: "string", label: t("notes") },
+  { key: "notes", type: "string", label: t("note", 2) },
   { key: "id", label: "", type: "editButton", width: "min-content" },
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
@@ -70,7 +70,7 @@ const tableActions = createFeature(() => ({
   name: Symbol("table-actions"),
   actions: () => [
     {
-      label: "New Log",
+      label: t("addLog"),
       icon: iconPlus,
       onClick: async () => {
         const newLog = await logDialog.value?.open();
@@ -93,7 +93,7 @@ const tableActions = createFeature(() => ({
     time: timeTypeRenderer(),
     duration: durationRenderer(),
     editButton: buttonRenderer<TableEntry>({
-      label: "Edit log",
+      label: t("editLog"),
       icon: iconEdit,
       onClick: async (row) => {
         const updatedLog = await logDialog.value?.open(row);
@@ -117,7 +117,7 @@ const tableActions = createFeature(() => ({
       },
     }),
     deleteButton: buttonRenderer<TableEntry>({
-      label: "Delete log",
+      label: t("deleteLog"),
       icon: iconTrash,
       onClick: async (row) => {
         await $db.remove(row);
