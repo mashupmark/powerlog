@@ -1,10 +1,15 @@
 <script lang="ts" setup>
-import { useToast } from "sit-onyx";
+import { flagDE, flagUS } from "@sit-onyx/flags";
+import { useToast, type SelectDialogOption } from "sit-onyx";
+
+const { t, locale, setLocale } = useI18n();
+const availableLocales = [
+  { label: "Deutsch", value: "de-DE", icon: flagDE },
+  { label: "English", value: "en-US", icon: flagUS },
+] satisfies SelectDialogOption[];
 
 const { $pwa } = useNuxtApp();
-const { t } = useI18n();
 const toast = useToast();
-
 watch(
   () => $pwa?.needRefresh,
   (needsRefresh) => {
@@ -29,6 +34,14 @@ watch(
         <OnyxNavItem :label="t('home')" link="/" />
         <OnyxNavItem :label="t('log', 2)" link="/logs" />
         <OnyxNavItem :label="t('report', 2)" link="/reports" />
+
+        <template #contextArea>
+          <OnyxLanguageMenuItem
+            :modelValue="locale"
+            :options="availableLocales"
+            @update:modelValue="setLocale($event as 'de-DE' | 'en-US')"
+          />
+        </template>
       </OnyxNavBar>
     </template>
 

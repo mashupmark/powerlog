@@ -26,6 +26,9 @@ importers:
       '@pinia/nuxt':
         specifier: 0.11.3
         version: 0.11.3(magicast@0.5.2)(pinia@3.0.4(typescript@6.0.3)(vue@3.5.34(typescript@6.0.3)))
+      '@sit-onyx/flags':
+        specifier: 1.2.0
+        version: 1.2.0
       '@sit-onyx/icons':
         specifier: 1.9.1
         version: 1.9.1
@@ -2470,6 +2473,10 @@ packages:
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
+
+  '@sit-onyx/flags@1.2.0':
+    resolution: {integrity: sha512-6bTeJbqUVZcp9DPrAtJ2ZyqmzIaOgCTWwW4Hd7OJwbwOwsVLRZJVShfJ2RA9SkfKti0NNHBafSwsUWts8pJN5g==}
+    engines: {node: '>=20'}
 
   '@sit-onyx/icons@1.9.1':
     resolution: {integrity: sha512-8qVuHPOw4oUut4V/1npGLDp5qLloTvP7iY4SyTnnV5U9T8OUCPfnn3jf78G0INYSfBRCDWjBI4m3nbl0ydLK4w==}
@@ -8229,6 +8236,8 @@ snapshots:
   '@sindresorhus/is@7.2.0': {}
 
   '@sindresorhus/merge-streams@4.0.0': {}
+
+  '@sit-onyx/flags@1.2.0': {}
 
   '@sit-onyx/icons@1.9.1': {}
 
