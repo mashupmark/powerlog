@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n();
 
-const { data: projects, isLoading } = useProjectsQuery();
+const { data: projects, isPending } = useProjectsQuery();
 
 const projectsByCustomer = computed(() =>
   projects.value?.reduce<Record<string, Set<string>>>((acc, log) => {
@@ -32,7 +32,7 @@ const changeSelection = async (customer: string, project: string) => {
           <OnyxHeadline is="h3">{{ t("customer", 2) }}</OnyxHeadline>
         </template>
 
-        <OnyxAccordion :skeleton="isLoading">
+        <OnyxAccordion :skeleton="isPending">
           <OnyxAccordionItem v-for="(projects, customer) in projectsByCustomer" :key="customer" :value="customer">
             <template #header>
               <div :class="{ 'customer--active': customer === selection?.customer }">{{ customer }}</div>
