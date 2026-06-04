@@ -6,7 +6,7 @@ const logDialog = useTemplateRef("logDialog");
 
 const recentProjectsId = useId();
 const { t } = useI18n();
-const { $db } = useNuxtApp();
+const db = useDB();
 
 const currentLog = useCurrentLog();
 const { data: recentProjects, isPending } = useRecentProjectsQuery({ max: 5 });
@@ -53,15 +53,7 @@ const stopLogging = async () => {
   const log = await logDialog.value?.open({ ...currentLog.value, stoppedAt: new Date().toISOString() });
   if (log === undefined) return; // Don't stop the log if cancel was clicked
 
-  await $db.put({
-    _id: log.startedAt,
-    startedAt: log.startedAt,
-    stoppedAt: log.stoppedAt,
-    customerName: log.customerName,
-    projectName: log.projectName,
-    location: log.location,
-    notes: log.notes,
-  });
+  await db.insertLog(log);
   currentLog.value = undefined;
 };
 </script>

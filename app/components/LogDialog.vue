@@ -13,11 +13,8 @@ const project = ref<string>();
 const location = ref<string>();
 const notes = ref<string>();
 
-// Partial type of Log which only contains the fields relevant for this modal
-type PartialLog = Pick<Log, "startedAt" | "stoppedAt" | "customerName" | "projectName" | "location" | "notes">;
-
-let close: (log: PartialLog | undefined) => void;
-const open = (initialData?: PartialLog) => {
+let close: (log: Log | undefined) => void;
+const open = (initialData?: Log) => {
   // Initialize / reset all fields before actually opening the modal
   date.value = initialData ? new Date(initialData.startedAt) : new Date();
   time.value =
@@ -33,7 +30,7 @@ const open = (initialData?: PartialLog) => {
   notes.value = initialData?.notes ?? undefined;
   isOpen.value = true;
 
-  return new Promise<PartialLog | undefined>((res) => {
+  return new Promise<Log | undefined>((res) => {
     close = (log) => {
       isOpen.value = false;
 
