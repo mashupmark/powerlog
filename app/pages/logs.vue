@@ -84,6 +84,7 @@ const tableActions = createFeature(() => ({
           stoppedAt: newLog.stoppedAt,
           customerName: newLog.customerName,
           projectName: newLog.projectName,
+          location: newLog.location,
           notes: newLog.notes,
         });
       },
