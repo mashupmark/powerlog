@@ -57,7 +57,7 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
   { key: "location", type: "string", label: t("location"), width: "min-content" },
   { key: "customerName", type: "string", label: t("customer"), width: "min-content" },
   { key: "projectName", type: "string", label: t("project"), width: "min-content" },
-  { key: "notes", type: "string", label: t("note", 2) },
+  { key: "notes", type: "string", label: t("note", 2), width: "minmax(24ch, auto)" },
   { key: "id", label: "", type: "editButton", width: "min-content" },
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);

@@ -37,7 +37,7 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
   { key: "stoppedAt", type: "time", label: t("stop"), width: "10ch" },
   { key: "duration", type: "duration", label: t("duration"), width: "10ch" },
   { key: "location", type: "string", label: t("location"), width: "min-content" },
-  { key: "notes", type: "string", label: t("note", 2) },
+  { key: "notes", type: "string", label: t("note", 2), width: "minmax(24ch, auto)" },
   { key: "id", label: "", type: "editButton", width: "min-content" },
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
