@@ -70,7 +70,7 @@ export default defineNuxtConfig({
     },
     workbox: {
       navigateFallback: "/",
-      globPatterns: ["**/*.{js,css,html,json,svg,webp}"],
+      globPatterns: ["**/*.{js,css,html,json,svg,webp,woff2}"],
       globIgnores: ["/db/**"],
     },
   },
