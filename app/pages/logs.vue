@@ -59,6 +59,7 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
   { key: "startedAt", type: "time", label: t("start"), width: "10ch" },
   { key: "stoppedAt", type: "time", label: t("stop"), width: "10ch" },
   { key: "duration", type: "duration", label: t("duration"), width: "10ch" },
+  { key: "location", type: "string", label: t("location"), width: "min-content" },
   { key: "customerName", type: "string", label: t("customer"), width: "min-content" },
   { key: "projectName", type: "string", label: t("project"), width: "min-content" },
   { key: "notes", type: "string", label: t("note", 2) },

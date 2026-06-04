@@ -10,10 +10,11 @@ const date = ref<Date | undefined>();
 const time = ref<TimeRange>();
 const customer = ref<string>();
 const project = ref<string>();
+const location = ref<string>();
 const notes = ref<string>();
 
 // Partial type of Log which only contains the fields relevant for this modal
-type PartialLog = Pick<Log, "startedAt" | "stoppedAt" | "customerName" | "projectName" | "notes">;
+type PartialLog = Pick<Log, "startedAt" | "stoppedAt" | "customerName" | "projectName" | "location" | "notes">;
 
 let close: (log: PartialLog | undefined) => void;
 const open = (initialData?: PartialLog) => {
@@ -28,6 +29,7 @@ const open = (initialData?: PartialLog) => {
       : undefined;
   customer.value = initialData?.customerName ?? undefined;
   project.value = initialData?.projectName ?? undefined;
+  location.value = initialData?.location ?? undefined;
   notes.value = initialData?.notes ?? undefined;
   isOpen.value = true;
 
@@ -85,7 +87,14 @@ const save = () => {
   const [startedAt, stoppedAt] = [start.toUTC().toISO(), stop.toUTC().toISO()];
   if (!startedAt || !stoppedAt) return;
 
-  close({ startedAt, stoppedAt, customerName: customer.value, projectName: project.value, notes: notes.value });
+  close({
+    startedAt,
+    stoppedAt,
+    customerName: customer.value,
+    projectName: project.value,
+    location: location.value,
+    notes: notes.value,
+  });
 };
 
 defineExpose({ open });
@@ -120,6 +129,8 @@ defineExpose({ open });
         :options="projectOptions"
         :required="!!customer"
       />
+
+      <OnyxInput :label="t('location')" v-model.trim="location" />
 
       <OnyxTextarea :label="t('note', 2)" v-model.trim="notes" />
     </OnyxForm>
