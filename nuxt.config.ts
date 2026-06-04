@@ -31,6 +31,9 @@ export default defineNuxtConfig({
   },
 
   pwa: {
+    devOptions: {
+      enabled: false,
+    },
     manifest: {
       name: "Powerlog",
       short_name: "Powerlog",
