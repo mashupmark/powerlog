@@ -9,7 +9,7 @@ const { t } = useI18n();
 const { $db } = useNuxtApp();
 
 const currentLog = useCurrentLog();
-const { data: recentProjects } = useRecentProjectsQuery({ max: 5 });
+const { data: recentProjects, isPending } = useRecentProjectsQuery({ max: 5 });
 
 const isCurrentLog = (recentProject: { customerName?: string; projectName?: string }) => {
   return (
@@ -85,7 +85,12 @@ const stopLogging = async () => {
     <OnyxHeadline :id="recentProjectsId" is="h2" class="recent-projects__headline">
       {{ t("recentProject", 2) }}
     </OnyxHeadline>
-    <div v-if="recentProjects?.length" class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
+
+    <OnyxLoadingIndicator v-if="isPending" class="recent-projects__empty" />
+    <OnyxEmpty v-else-if="recentProjects?.length === 0" class="recent-projects__empty">
+      {{ t("noRecentProjects") }}
+    </OnyxEmpty>
+    <div v-else class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
       <ProjectCard
         v-for="project in recentProjects"
         :key="`${project.customerName}>${project.projectName}`"
@@ -96,7 +101,6 @@ const stopLogging = async () => {
         @stopClick="stopLogging()"
       />
     </div>
-    <OnyxEmpty v-else class="recent-projects__empty">{{ t("noRecentProjects") }}</OnyxEmpty>
 
     <OnyxFAB
       v-if="currentLog === undefined"
@@ -135,6 +139,10 @@ const stopLogging = async () => {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+    }
+
+    &__loading {
+      padding: 0 auto;
     }
 
     &__empty {
