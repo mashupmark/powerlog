@@ -1,30 +1,13 @@
 <script lang="ts" setup>
 import { flagDE, flagUS } from "@sit-onyx/flags";
-import { useToast, type SelectDialogOption } from "sit-onyx";
+import { type SelectDialogOption } from "sit-onyx";
 
+const { $pwa } = useNuxtApp();
 const { t, locale, setLocale } = useI18n();
 const availableLocales = [
   { label: "Deutsch", value: "de-DE", icon: flagDE },
   { label: "English", value: "en-US", icon: flagUS },
 ] satisfies SelectDialogOption[];
-
-const { $pwa } = useNuxtApp();
-const toast = useToast();
-watch(
-  () => $pwa?.needRefresh,
-  (needsRefresh) => {
-    if (needsRefresh) {
-      toast.show({
-        headline: t("updateAvaliable"),
-        description: t("clickToUpdate"),
-        duration: 0,
-        clickable: true,
-        onClick: () => $pwa?.updateServiceWorker(true),
-      });
-    }
-  },
-  { immediate: true },
-);
 </script>
 
 <template>
@@ -41,6 +24,10 @@ watch(
             :options="availableLocales"
             @update:modelValue="setLocale($event as 'de-DE' | 'en-US')"
           />
+        </template>
+
+        <template #globalContextArea v-if="$pwa?.needRefresh">
+          <OnyxButton :label="t('updateAvailable')" @click="$pwa.updateServiceWorker()" />
         </template>
       </OnyxNavBar>
     </template>
