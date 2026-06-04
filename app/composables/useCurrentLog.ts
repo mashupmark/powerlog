@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-export type CurrentLog = { startedAt: string; customerName?: string; projectName?: string };
+export type CurrentLog = { startedAt: string; customerName?: string; projectName?: string; location?: string };
 export const useCurrentLog = () => {
   const localStorageKey = "currentLog";
   const currentLog = ref<CurrentLog | undefined>();
@@ -38,6 +38,10 @@ export const useCurrentLog = () => {
 
       if ("projectName" in parsedLog && typeof parsedLog.projectName === "string" && parsedLog.projectName.length > 0) {
         validatedLog.projectName = parsedLog.projectName;
+      }
+
+      if ("location" in parsedLog && typeof parsedLog.location === "string" && parsedLog.location.length > 0) {
+        validatedLog.location = parsedLog.location;
       }
 
       currentLog.value = validatedLog;

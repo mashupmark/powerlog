@@ -37,11 +37,12 @@ const workingTime = computed(() => {
   return duration.toFormat("h'h'm'm's's'");
 });
 
-const startLogging = (initalOptions?: { customerName?: string; projectName?: string }) => {
+const startLogging = (initalOptions?: { customerName?: string; projectName?: string; location?: string }) => {
   currentLog.value = {
     startedAt: DateTime.now().toUTC().toISO(),
     customerName: initalOptions?.customerName,
     projectName: initalOptions?.projectName,
+    location: initalOptions?.location,
   };
 };
 
@@ -58,6 +59,7 @@ const stopLogging = async () => {
     stoppedAt: log.stoppedAt ?? new Date().toISOString(),
     customerName: log.customerName ?? currentLog.value.customerName,
     projectName: log.projectName ?? currentLog.value.projectName,
+    location: log.location,
     notes: log.notes,
   });
   currentLog.value = undefined;

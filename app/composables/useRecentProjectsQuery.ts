@@ -7,16 +7,17 @@ export const useRecentProjectsQuery = () => {
   return useQuery({
     key: () => ["recent-projects"],
     query: async () => {
-      const response: PouchDB.Find.FindResponse<Pick<Log, "customerName" | "projectName">> = await $db.find({
-        fields: ["customerName", "projectName"],
-        selector: {
-          _id: { $gt: DateTime.now().minus({ weeks: 1 }).toUTC().toISO() },
-          customerName: { $exists: true },
-          projectName: { $exists: true },
-        },
-        sort: [{ _id: "desc" }],
-        limit: Infinity,
-      });
+      const response: PouchDB.Find.FindResponse<Pick<Log, "customerName" | "projectName" | "location">> =
+        await $db.find({
+          fields: ["customerName", "projectName", "location"],
+          selector: {
+            _id: { $gt: DateTime.now().minus({ weeks: 1 }).toUTC().toISO() },
+            customerName: { $exists: true },
+            projectName: { $exists: true },
+          },
+          sort: [{ _id: "desc" }],
+          limit: Infinity,
+        });
 
       const deduplicatedProjects = response.docs.filter((log, index, array) => {
         const indexOfMatchingItem = array.findIndex(
