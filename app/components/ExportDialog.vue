@@ -96,10 +96,6 @@ defineExpose({ open });
 @use "sit-onyx/breakpoints.scss";
 
 .form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
   padding: 2rem;
   width: 90dvw;
 
