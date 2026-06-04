@@ -32,7 +32,7 @@ const projectDuration = computed(() => {
 type TableEntry = UnwrapRef<typeof logs>[number];
 type CustomColumnTypes = ColumnTypesFromFeatures<typeof withCustomActions>;
 const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColumnTypes>[]>(() => [
-  { key: "date", type: "date", label: t("date"), width: "16ch" },
+  { key: "date", type: "date", label: t("date"), width: "18ch" },
   { key: "startedAt", type: "time", label: t("start"), width: "10ch" },
   { key: "stoppedAt", type: "time", label: t("stop"), width: "10ch" },
   { key: "duration", type: "duration", label: t("duration"), width: "10ch" },
