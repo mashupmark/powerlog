@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { DateTime, Interval } from "luxon";
-import { unparse } from "papaparse";
 
 const { t, locale } = useI18n();
 const { $db } = useNuxtApp();
@@ -65,7 +64,9 @@ const { mutate, isLoading } = useMutation({
       [t("note", 2)]: doc.notes ?? "",
     }));
 
-    const csv = unparse(logs, { quotes: true, header: true, escapeFormulae: true });
+    const papaparse = await import("papaparse");
+    const csv = papaparse.unparse(logs, { quotes: true, header: true, escapeFormulae: true });
+
     downloadFile(csv, "powerlog.csv", "text/csv;charset=utf-8;");
   },
   onSuccess: () => close(),
