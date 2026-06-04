@@ -1,0 +1,13 @@
+# Changelog
+
+## v1.0.2
+
+- The docker image now supports arm64 as platform
+
+## v1.0.1
+
+- A language picker was added to easily switch between the supported languages and overwrite the system default
+
+## v1.0.0
+
+Initial release of Powerlog
