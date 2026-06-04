@@ -30,22 +30,14 @@ export const useDB = () => {
     // Instead of updating the existing log a new one is created and the old one deleted
     // this is done to keep the _id column in tact since it is indexed by default
     try {
-      await $db.remove({ _id: log._id, _rev: log._rev });
-      await $db.put({
-        _id: log.startedAt,
-        startedAt: log.startedAt,
-        stoppedAt: log.stoppedAt,
-        location: log.location,
-        customerName: log.customerName,
-        projectName: log.projectName,
-        notes: log.notes,
-      });
+      await deleteLog({ _id: log._id, _rev: log._rev });
+      await insertLog(log);
     } catch (e) {
       throw new Error("Failed to replace existing log", { cause: e });
     }
   };
 
-  const deleteLog = async (log: PouchDB.Core.ExistingDocument<Log>) => {
+  const deleteLog = async (log: PouchDB.Core.RemoveDocument) => {
     await $db.remove(log);
   };
 
