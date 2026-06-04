@@ -9,7 +9,7 @@ const { t } = useI18n();
 const { $db } = useNuxtApp();
 
 const currentLog = useCurrentLog();
-const { data: recentProjects } = useRecentProjectsQuery();
+const { data: recentProjects } = useRecentProjectsQuery({ max: 5 });
 
 const isCurrentLog = (recentProject: { customerName?: string; projectName?: string }) => {
   return (
@@ -86,9 +86,8 @@ const stopLogging = async () => {
       {{ t("recentProject", 2) }}
     </OnyxHeadline>
     <div v-if="recentProjects?.length" class="recent-projects__list" role="list" :aria-labelledby="recentProjectsId">
-      <!-- Show the 5 most recent projects -->
       <ProjectCard
-        v-for="project in recentProjects?.slice(0, 5)"
+        v-for="project in recentProjects"
         :key="`${project.customerName}>${project.projectName}`"
         :project
         :showStopButton="currentLog !== undefined && isCurrentLog(project)"

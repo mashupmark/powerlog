@@ -1,7 +1,11 @@
 import { DateTime } from "luxon";
 import type { Log } from "~~/shared/db";
 
-export const useRecentProjectsQuery = () => {
+/**
+ * Get the most recently used projects deduplicated by the combination of customer + project name
+ * @param options.max Limit for how many projects to return at max
+ */
+export const useRecentProjectsQuery = (options: { max: number }) => {
   const { $db } = useNuxtApp();
 
   return useQuery({
@@ -19,13 +23,22 @@ export const useRecentProjectsQuery = () => {
           limit: Infinity,
         });
 
-      const deduplicatedProjects = response.docs.filter((log, index, array) => {
-        const indexOfMatchingItem = array.findIndex(
+      const deduplicatedProjects: (typeof response)["docs"] = [];
+      for (let index = 0; index < response.docs.length; index++) {
+        const log = response.docs[index]!;
+
+        // If the number of deduplicated items already reached the specified max stop early
+        if (deduplicatedProjects.length >= options.max) break;
+
+        const indexOfMatchingItem = response.docs.findIndex(
           ({ customerName, projectName }) => log.customerName === customerName && log.projectName === projectName,
         );
+
         // Only keep the item if it's a new one, otherwise the index of it would be different
-        return index === indexOfMatchingItem;
-      });
+        if (index === indexOfMatchingItem) {
+          deduplicatedProjects.push(log);
+        }
+      }
 
       return deduplicatedProjects;
     },
