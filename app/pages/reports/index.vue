@@ -6,8 +6,8 @@ import type { UnwrapRef } from "vue";
 
 const logDialog = useTemplateRef("logDialog");
 
-const { $db } = useNuxtApp();
 const { t, locale } = useI18n();
+const db = useDB();
 
 const props = defineProps<{ customer: string; project: string }>();
 
@@ -54,29 +54,13 @@ const withCustomActions = createFeature(() => ({
       onClick: async (row) => {
         const updatedLog = await logDialog.value?.open(row);
         if (updatedLog === undefined) return;
-
-        // Instead of updating the existing log a new one is created and the old one deleted
-        // this is done to keep the _id column in tact since it is indexed by default
-        try {
-          await $db.remove({ _id: row._id, _rev: row._rev });
-          await $db.put({
-            _id: updatedLog.startedAt,
-            startedAt: updatedLog.startedAt,
-            stoppedAt: updatedLog.stoppedAt,
-            customerName: updatedLog.customerName,
-            projectName: updatedLog.projectName,
-          });
-        } catch (e) {
-          throw new Error("Failed to replace existing log", { cause: e });
-        }
+        await db.updateLog({ ...updatedLog, _id: row._id, _rev: row._rev });
       },
     }),
     deleteButton: buttonRenderer<TableEntry>({
       label: t("deleteLog"),
       icon: iconTrash,
-      onClick: async (row) => {
-        await $db.remove(row);
-      },
+      onClick: (row) => db.deleteLog(row),
     }),
   },
 }));

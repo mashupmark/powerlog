@@ -13,12 +13,7 @@ import type { UnwrapRef } from "vue";
 const logDialog = useTemplateRef("logDialog");
 
 const { t, locale } = useI18n();
-const { $db } = useNuxtApp();
-
-const { data: numberOfLogs } = useQuery({
-  key: ["logs", "doc_count"],
-  query: async () => (await $db.info()).doc_count,
-});
+const db = useDB();
 
 const PAGE_SIZE = 25;
 const paginationState = ref<DataGridFeatures.PaginationState>({
@@ -28,7 +23,7 @@ const paginationState = ref<DataGridFeatures.PaginationState>({
 });
 
 // Everytime the number of logs changes the pagination State needs to be updated
-watchEffect(() => (paginationState.value.pages = Math.ceil((numberOfLogs.value ?? 0) / PAGE_SIZE)));
+watchEffect(() => (paginationState.value.pages = Math.ceil((db.info.value.doc_count ?? 0) / PAGE_SIZE)));
 
 const { data, isPending, isLoading, loadNextPage } = useLogsInfiniteQuery({ pageSize: PAGE_SIZE });
 const logs = computed(() =>
@@ -76,16 +71,7 @@ const tableActions = createFeature(() => ({
       onClick: async () => {
         const newLog = await logDialog.value?.open();
         if (!newLog) return;
-
-        // Only insert fields which are expected to avoid extra data in the schema less db
-        await $db.put({
-          _id: newLog.startedAt,
-          startedAt: newLog.startedAt,
-          stoppedAt: newLog.stoppedAt,
-          customerName: newLog.customerName,
-          projectName: newLog.projectName,
-          notes: newLog.notes,
-        });
+        await db.insertLog(newLog);
       },
     },
   ],
@@ -99,30 +85,13 @@ const tableActions = createFeature(() => ({
       onClick: async (row) => {
         const updatedLog = await logDialog.value?.open(row);
         if (updatedLog === undefined) return;
-
-        // Instead of updating the existing log a new one is created and the old one deleted
-        // this is done to keep the _id column in tact since it is indexed by default
-        try {
-          await $db.remove({ _id: row._id, _rev: row._rev });
-          await $db.put({
-            _id: updatedLog.startedAt,
-            startedAt: updatedLog.startedAt,
-            stoppedAt: updatedLog.stoppedAt,
-            customerName: updatedLog.customerName,
-            projectName: updatedLog.projectName,
-            notes: updatedLog.notes,
-          });
-        } catch (e) {
-          throw new Error("Failed to replace existing log", { cause: e });
-        }
+        await db.updateLog({ ...updatedLog, _id: row._id, _rev: row._rev });
       },
     }),
     deleteButton: buttonRenderer<TableEntry>({
       label: t("deleteLog"),
       icon: iconTrash,
-      onClick: async (row) => {
-        await $db.remove(row);
-      },
+      onClick: (row) => db.deleteLog(row),
     }),
   },
 }));
