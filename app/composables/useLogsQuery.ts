@@ -6,7 +6,7 @@ export const useLogsQuery = (options: ComputedRef<{ customerName: string; projec
     query: async () => {
       const logs = await $db.find({
         selector: { customerName: options.value.customerName, projectName: options.value.projectName },
-        limit: Infinity,
+        limit: (2 ^ 32) - 1,
         sort: [{ _id: "desc" }],
       });
       return logs.docs;

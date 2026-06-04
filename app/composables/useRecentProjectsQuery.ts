@@ -20,7 +20,7 @@ export const useRecentProjectsQuery = (options: { max: number }) => {
             projectName: { $exists: true },
           },
           sort: [{ _id: "desc" }],
-          limit: Infinity,
+          limit: (2 ^ 32) - 1,
         });
 
       const deduplicatedProjects: (typeof response)["docs"] = [];
