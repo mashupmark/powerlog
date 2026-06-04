@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { iconEdit, iconPlus, iconTrash } from "@sit-onyx/icons";
+import { iconEdit, iconFileCsv, iconPlus, iconTrash } from "@sit-onyx/icons";
 import { DateTime, Interval } from "luxon";
 import {
   createFeature,
@@ -11,6 +11,7 @@ import {
 import type { UnwrapRef } from "vue";
 
 const logDialog = useTemplateRef("logDialog");
+const exportDialog = useTemplateRef("exportDialog");
 
 const { t, locale } = useI18n();
 const db = useDB();
@@ -68,11 +69,19 @@ const tableActions = createFeature(() => ({
     {
       label: t("addLog"),
       icon: iconPlus,
+      displayAs: "button",
       onClick: async () => {
         const newLog = await logDialog.value?.open();
         if (!newLog) return;
         await db.insertLog(newLog);
       },
+    },
+    {
+      label: t("export"),
+      icon: iconFileCsv,
+      displayAs: "button",
+      mode: "outline",
+      onClick: () => exportDialog.value?.open(),
     },
   ],
   typeRenderer: {
@@ -110,6 +119,7 @@ const tableActions = createFeature(() => ({
       truncation="ellipsis"
     />
     <LogDialog ref="logDialog" />
+    <ExportDialog ref="exportDialog" />
   </OnyxPageLayout>
 </template>
 

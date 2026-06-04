@@ -10,7 +10,7 @@ export const useCustomerProjectsQuery = (customer: MaybeRef<string | undefined>)
       const projects: PouchDB.Find.FindResponse<Pick<Log, "projectName">> = await $db.find({
         fields: ["projectName"],
         selector: { customerName: unref(customer), projectName: { $exists: true } },
-        limit: Infinity,
+        limit: (2 ^ 32) - 1,
       });
       return Array.from(new Set(projects.docs.map(({ projectName }) => projectName!)));
     },

@@ -3,6 +3,7 @@
 ## v1.1.0
 
 - New field "location" to add the workplace to a log
+- New export button to download a specific range of logs as CSV
 - Instead of a toast, a button will be shown in the nav bar if an update is available
 - Bug fix: During offline use the fonts and icons will now be cached
 - Small UI and performance improvements

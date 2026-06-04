@@ -9,7 +9,7 @@ export const useProjectsQuery = () => {
       const logs = (await $db.find({
         fields: ["customerName", "projectName"],
         selector: { customerName: { $exists: true }, projectName: { $exists: true } },
-        limit: Infinity,
+        limit: (2 ^ 32) - 1,
       })) as PouchDB.Find.FindResponse<Required<Pick<Log, "customerName" | "projectName">>>;
 
       // Sorting within the query would require an extra index, so to save space sorting is done as computation
