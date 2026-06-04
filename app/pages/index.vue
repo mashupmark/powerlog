@@ -54,11 +54,11 @@ const stopLogging = async () => {
   if (log === undefined) return; // Don't stop the log if cancel was clicked
 
   await $db.put({
-    _id: log.startedAt ?? currentLog.value.startedAt,
-    startedAt: log.startedAt ?? currentLog.value.startedAt,
-    stoppedAt: log.stoppedAt ?? new Date().toISOString(),
-    customerName: log.customerName ?? currentLog.value.customerName,
-    projectName: log.projectName ?? currentLog.value.projectName,
+    _id: log.startedAt,
+    startedAt: log.startedAt,
+    stoppedAt: log.stoppedAt,
+    customerName: log.customerName,
+    projectName: log.projectName,
     location: log.location,
     notes: log.notes,
   });
