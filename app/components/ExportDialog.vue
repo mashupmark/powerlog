@@ -53,16 +53,16 @@ const { mutate, isLoading } = useMutation({
     });
 
     const logs = data.docs.map((doc) => ({
-      Date: DateTime.fromISO(doc.startedAt).toFormat("ccc dd.MM.yyyy", { locale: unref(locale) }),
-      Start: DateTime.fromISO(doc.startedAt).toFormat("HH:mm"),
-      Stop: DateTime.fromISO(doc.stoppedAt).toFormat("HH:mm"),
-      Duration: Interval.fromDateTimes(DateTime.fromISO(doc.startedAt), DateTime.fromISO(doc.stoppedAt))
+      [t("date")]: DateTime.fromISO(doc.startedAt).toFormat("ccc dd.MM.yyyy", { locale: unref(locale) }),
+      [t("start")]: DateTime.fromISO(doc.startedAt).toFormat("HH:mm"),
+      [t("stop")]: DateTime.fromISO(doc.stoppedAt).toFormat("HH:mm"),
+      [t("duration")]: Interval.fromDateTimes(DateTime.fromISO(doc.startedAt), DateTime.fromISO(doc.stoppedAt))
         .toDuration()
         .toFormat("h'h'm'm'"),
-      Location: doc.location ?? "",
-      Customer: doc.customerName ?? "",
-      Project: doc.projectName ?? "",
-      Notes: doc.notes ?? "",
+      [t("location")]: doc.location ?? "",
+      [t("customer")]: doc.customerName ?? "",
+      [t("project")]: doc.projectName ?? "",
+      [t("note", 2)]: doc.notes ?? "",
     }));
 
     const csv = unparse(logs, { quotes: true, header: true, escapeFormulae: true });
