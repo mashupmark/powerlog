@@ -19,6 +19,7 @@ const selection = computed(() => {
   return { customer, project };
 });
 
+const openCustomers = ref(selection.value?.customer ? [selection.value.customer] : []);
 const changeSelection = async (customer: string, project: string) => {
   await router.replace({ query: { customer, project } });
 };
@@ -32,7 +33,7 @@ const changeSelection = async (customer: string, project: string) => {
           <OnyxHeadline is="h3">{{ t("customer", 2) }}</OnyxHeadline>
         </template>
 
-        <OnyxAccordion :skeleton="isPending">
+        <OnyxAccordion :skeleton="isPending" v-model="openCustomers">
           <OnyxAccordionItem v-for="(projects, customer) in projectsByCustomer" :key="customer" :value="customer">
             <template #header>
               <div :class="{ 'customer--active': customer === selection?.customer }">{{ customer }}</div>
