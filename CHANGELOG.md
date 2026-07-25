@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.2.0
+
+**New feature: Archive logs inside a report**
+When viewing the report of a project it's now possible to mark logs of it as "archived".
+Archived logs will be hidden from the report by default, but can be shown by clicking the "Show archived" button.
+Projects containing only archived logs won't be shown in the sidebar by default, click the "Show archived" button at the bottom of the sidebar to make them visible.
+
+**Other changes:**
+
+- Fixed a bug where the currently selected customer wasn't expanded in the reports upon reload
+- Dependency updates
+
 ## v1.1.0
 
 - New field "location" to add the workplace to a log
