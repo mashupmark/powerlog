@@ -1,17 +1,10 @@
 <script setup lang="ts">
+import { iconArchive } from "@sit-onyx/icons";
+
 const { t } = useI18n();
+const router = useRouter();
 
 const { data: projects, isPending } = useProjectsQuery();
-
-const projectsByCustomer = computed(() =>
-  projects.value?.reduce<Record<string, Set<string>>>((acc, log) => {
-    acc[log.customerName] ??= new Set<string>();
-    acc[log.customerName]?.add(log.projectName);
-    return acc;
-  }, {}),
-);
-
-const router = useRouter();
 
 const selection = computed(() => {
   const { customer, project } = router.currentRoute.value.query;
@@ -21,8 +14,40 @@ const selection = computed(() => {
 
 const openCustomers = ref(selection.value?.customer ? [selection.value.customer] : []);
 const changeSelection = async (customer: string, project: string) => {
-  await router.replace({ query: { customer, project } });
+  await router.replace({ query: { customer, project, showArchived: showArchived.value ? "true" : undefined } });
 };
+
+const showArchived = computed(() => router.currentRoute.value.query.showArchived === "true");
+const changeShowArchived = async (showArchived: boolean) => {
+  await router.replace({
+    query: {
+      customer: selection.value?.customer,
+      project: selection.value?.project,
+      showArchived: showArchived ? "true" : undefined,
+    },
+  });
+};
+
+const groupedByArchived = computed(() =>
+  Object.groupBy(projects.value ?? [], (p) => (p.archived ? "archived" : "unarchived")),
+);
+
+const projectsByCustomer = computed(() => {
+  const logs = [...(groupedByArchived.value.unarchived ?? [])];
+
+  if (showArchived.value === true && groupedByArchived.value.archived !== undefined) {
+    logs.push(...groupedByArchived.value.archived);
+  }
+
+  return logs.reduce<Record<string, { project: string; archived: boolean }[]>>((acc, log) => {
+    acc[log.customerName] ??= [];
+
+    if (acc[log.customerName]?.some(({ project }) => project === log.projectName)) return acc;
+    acc[log.customerName]?.push({ project: log.projectName, archived: log.archived });
+
+    return acc;
+  }, {});
+});
 </script>
 
 <template>
@@ -40,15 +65,24 @@ const changeSelection = async (customer: string, project: string) => {
             </template>
 
             <OnyxMenuItem
-              v-for="project in projects"
+              v-for="{ project, archived } in projects"
               :key="project"
               :active="customer === selection?.customer && project === selection?.project"
+              :label="project"
+              :icon="archived ? iconArchive : undefined"
               @click="changeSelection(customer, project)"
-            >
-              {{ project }}
-            </OnyxMenuItem>
+            />
           </OnyxAccordionItem>
         </OnyxAccordion>
+
+        <template #footer>
+          <OnyxButton
+            :label="showArchived ? t('hideArchived') : t('showArchived')"
+            :icon="iconArchive"
+            mode="plain"
+            @click="changeShowArchived(!showArchived)"
+          />
+        </template>
       </OnyxSidebar>
     </template>
 
