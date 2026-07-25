@@ -23,6 +23,7 @@ export const useDB = () => {
       customerName: log.customerName,
       projectName: log.projectName,
       notes: log.notes,
+      archived: log.archived,
     });
   };
 

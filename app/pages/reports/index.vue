@@ -11,9 +11,10 @@ const db = useDB();
 
 const props = defineProps<{ customer: string; project: string }>();
 
-const { data, isLoading } = useLogsQuery(
+const { data, isPending } = useLogsQuery(
   computed(() => ({ customerName: props.customer, projectName: props.project })),
 );
+
 const logs = computed(() =>
   (data.value ?? []).map((log) => ({
     id: log._id,
@@ -36,6 +37,7 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
   { key: "startedAt", type: "time", label: t("start"), width: "10ch" },
   { key: "stoppedAt", type: "time", label: t("stop"), width: "10ch" },
   { key: "duration", type: "duration", label: t("duration"), width: "10ch" },
+  { key: "archived", type: "switch", label: t("archived"), width: "min-content" },
   { key: "location", type: "string", label: t("location"), width: "min-content" },
   { key: "notes", type: "string", label: t("note", 2), width: "minmax(24ch, auto)" },
   { key: "id", label: "", type: "editButton", width: "min-content" },
@@ -48,6 +50,9 @@ const withCustomActions = createFeature(() => ({
     date: dateTypeRenderer(locale),
     time: timeTypeRenderer(),
     duration: durationRenderer(),
+    switch: switchRenderer({
+      onUpdate: (archived, row) => db.updateLog({ ...row, archived }),
+    }),
     editButton: buttonRenderer<TableEntry>({
       label: t("editLog"),
       icon: iconEdit,
@@ -79,7 +84,7 @@ const withCustomActions = createFeature(() => ({
       :features="[withCustomActions]"
       :data="logs"
       :columns
-      :skeleton="isLoading"
+      :skeleton="isPending"
       truncation="ellipsis"
     />
 
