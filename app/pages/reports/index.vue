@@ -71,7 +71,7 @@ const withCustomActions = createFeature(() => ({
       (selectionState.value.selectMode === "exclude" && selectionState.value.contingent.size === 0)
     ) {
       actions.push({
-        label: showArchived.value ? "Unarchive" : "Archive",
+        label: showArchived.value ? t("unarchive") : t("archive"),
         displayAs: "button",
         onClick: async () => {
           const logsToUpdate = logsToDisplay.value.filter(({ id }) =>
@@ -87,7 +87,7 @@ const withCustomActions = createFeature(() => ({
 
     if (showArchived.value === true || logsToDisplay.value.length < logs.value.length) {
       actions.push({
-        label: showArchived.value ? "Hide archived" : "Show archived",
+        label: showArchived.value ? t("hideArchived") : t("showArchived"),
         icon: showArchived.value ? iconEye : iconEyeDisabled,
         displayAs: "button",
         mode: "plain",
