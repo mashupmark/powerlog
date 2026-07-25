@@ -1,7 +1,14 @@
 <script lang="ts" setup>
-import { iconEdit, iconTrash } from "@sit-onyx/icons";
+import { iconEdit, iconEye, iconEyeDisabled, iconTrash } from "@sit-onyx/icons";
 import { DateTime, Duration, Interval } from "luxon";
-import { createFeature, type ColumnConfig, type ColumnGroupConfig, type ColumnTypesFromFeatures } from "sit-onyx";
+import {
+  createFeature,
+  DataGridFeatures,
+  type ColumnConfig,
+  type ColumnGroupConfig,
+  type ColumnTypesFromFeatures,
+} from "sit-onyx";
+import type { DataGridAction } from "sit-onyx/dist/components/OnyxDataGrid/features/dataGridActions/types.js";
 import type { UnwrapRef } from "vue";
 
 const logDialog = useTemplateRef("logDialog");
@@ -11,9 +18,10 @@ const db = useDB();
 
 const props = defineProps<{ customer: string; project: string }>();
 
-const { data, isLoading } = useLogsQuery(
+const { data, isPending } = useLogsQuery(
   computed(() => ({ customerName: props.customer, projectName: props.project })),
 );
+
 const logs = computed(() =>
   (data.value ?? []).map((log) => ({
     id: log._id,
@@ -22,6 +30,11 @@ const logs = computed(() =>
     ...log,
   })),
 );
+
+const showArchived = ref(false);
+const logsToDisplay = computed(() => {
+  return logs.value.filter((log) => showArchived.value === (log.archived ?? false));
+});
 
 const projectDuration = computed(() => {
   return logs.value.reduce<Duration>((acc, cur) => {
@@ -42,8 +55,48 @@ const columns = computed<ColumnConfig<TableEntry, ColumnGroupConfig, CustomColum
   { key: "_rev", label: "", type: "deleteButton", width: "min-content" },
 ]);
 
+const selectionState = ref<DataGridFeatures.SelectionState>({
+  selectMode: "include",
+  contingent: new Set<TableEntry["id"]>(),
+});
+const withSelection = DataGridFeatures.useSelection<TableEntry>({ selectionState });
+
 const withCustomActions = createFeature(() => ({
   name: Symbol("table-actions"),
+  actions: () => {
+    const actions: DataGridAction[] = [];
+
+    if (
+      (selectionState.value.selectMode === "include" && selectionState.value.contingent.size > 0) ||
+      (selectionState.value.selectMode === "exclude" && selectionState.value.contingent.size === 0)
+    ) {
+      actions.push({
+        label: showArchived.value ? t("unarchive") : t("archive"),
+        displayAs: "button",
+        onClick: async () => {
+          const logsToUpdate = logsToDisplay.value.filter(({ id }) =>
+            selectionState.value.selectMode === "include"
+              ? selectionState.value.contingent.has(id)
+              : !selectionState.value.contingent.has(id),
+          );
+          await db.archiveLogs(logsToUpdate, !showArchived.value);
+          selectionState.value = { selectMode: "include", contingent: new Set<TableEntry["id"]>() };
+        },
+      });
+    }
+
+    if (showArchived.value === true || logsToDisplay.value.length < logs.value.length) {
+      actions.push({
+        label: showArchived.value ? t("hideArchived") : t("showArchived"),
+        icon: showArchived.value ? iconEye : iconEyeDisabled,
+        displayAs: "button",
+        mode: "plain",
+        onClick: () => (showArchived.value = !showArchived.value),
+      });
+    }
+
+    return actions;
+  },
   typeRenderer: {
     date: dateTypeRenderer(locale),
     time: timeTypeRenderer(),
@@ -76,10 +129,10 @@ const withCustomActions = createFeature(() => ({
     <OnyxDataGrid
       class="data-grid"
       :headline="t('log', 2)"
-      :features="[withCustomActions]"
-      :data="logs"
+      :features="[withSelection, withCustomActions]"
+      :data="logsToDisplay"
       :columns
-      :skeleton="isLoading"
+      :skeleton="isPending"
       truncation="ellipsis"
     />
 

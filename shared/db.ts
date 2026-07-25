@@ -6,4 +6,5 @@ export type Log = {
   customerName?: string;
   projectName?: string;
   notes?: string;
+  archived?: boolean;
 };
