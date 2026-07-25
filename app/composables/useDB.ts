@@ -13,19 +13,7 @@ export const useDB = () => {
    * Create a new log
    * Only fields existing on in the Log schema will be respected
    */
-  const insertLog = async (log: Log) => {
-    // Only insert fields which are expected to avoid extra data in the schema less db
-    await $db.put({
-      _id: log.startedAt,
-      startedAt: log.startedAt,
-      stoppedAt: log.stoppedAt,
-      location: log.location,
-      customerName: log.customerName,
-      projectName: log.projectName,
-      notes: log.notes,
-      archived: log.archived,
-    });
-  };
+  const insertLog = (log: Log) => $db.put(sanetizeLog(log));
 
   const updateLog = async (log: PouchDB.Core.ExistingDocument<Log>) => {
     // Instead of updating the existing log a new one is created and the old one deleted
@@ -42,5 +30,24 @@ export const useDB = () => {
     await $db.remove(log);
   };
 
-  return { info, insertLog, updateLog, deleteLog };
+  const archiveLogs = async (logs: PouchDB.Core.ExistingDocument<Log>[], archived: boolean) => {
+    await $db.bulkDocs(logs.map((log) => sanetizeLog({ ...log, archived: archived })));
+  };
+
+  return { info, insertLog, updateLog, archiveLogs, deleteLog };
+};
+
+// Only take fields which are expected to avoid extra data in the schema less db
+const sanetizeLog = (log: Log & { _id?: string; _rev?: string }) => {
+  return {
+    _id: log._id ?? log.startedAt,
+    _rev: log._rev,
+    startedAt: log.startedAt,
+    stoppedAt: log.stoppedAt,
+    location: log.location,
+    customerName: log.customerName,
+    projectName: log.projectName,
+    notes: log.notes,
+    archived: log.archived,
+  };
 };

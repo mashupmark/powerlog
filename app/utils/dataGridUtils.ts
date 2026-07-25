@@ -1,5 +1,5 @@
 import { DateTime, Duration } from "luxon";
-import { DataGridFeatures, OnyxCheckbox, OnyxSwitch, OnyxSystemButton, type DataGridEntry } from "sit-onyx";
+import { DataGridFeatures, OnyxSystemButton, type DataGridEntry } from "sit-onyx";
 
 export const dateTypeRenderer = <TEntry extends DataGridEntry = DataGridEntry>(locale: MaybeRef<string>) =>
   DataGridFeatures.createTypeRenderer<any, TEntry>({
@@ -46,21 +46,5 @@ export const buttonRenderer = <TEntry extends DataGridEntry = DataGridEntry>(opt
           label: options.label,
           onClick: () => options.onClick(row),
         }),
-    },
-  });
-
-export const switchRenderer = <TEntry extends DataGridEntry = DataGridEntry>(options: {
-  onUpdate: (value: boolean, row: TEntry) => void | Promise<void>;
-}) =>
-  DataGridFeatures.createTypeRenderer<any, TEntry>({
-    cell: {
-      component: ({ modelValue, row, column }) => {
-        return h(OnyxSwitch, {
-          label: column.toString(),
-          hideLabel: true,
-          modelValue: !!modelValue,
-          "onUpdate:modelValue": (value) => options.onUpdate(value, row),
-        });
-      },
     },
   });
