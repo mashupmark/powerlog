@@ -4,6 +4,7 @@
 
 - Fix a bug where only up to 29 customers would be shown in the customer dropdown
 - The infinite scroll on the logs page now works right away even if the page was reloaded
+- Minor dependency updates
 
 ## v1.2.0
 
