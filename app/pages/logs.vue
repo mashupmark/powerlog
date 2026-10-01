@@ -24,7 +24,7 @@ const paginationState = ref<DataGridFeatures.PaginationState>({
 });
 
 // Everytime the number of logs changes the pagination State needs to be updated
-watchEffect(() => (paginationState.value.pages = Math.ceil((db.info.value.doc_count ?? 0) / PAGE_SIZE)));
+watchEffect(() => (paginationState.value.pages = Math.ceil((db.info.value?.doc_count ?? 0) / PAGE_SIZE)));
 
 const { data, isPending, isLoading, loadNextPage } = useLogsInfiniteQuery({ pageSize: PAGE_SIZE });
 const logs = computed(() =>
