@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { DateTime, Interval } from "luxon";
+import { POUCH_DB_MAX_LIMIT } from "~~/shared/db";
 
 const { t, locale } = useI18n();
 const { $db } = useNuxtApp();
@@ -48,7 +49,7 @@ const { mutate, isLoading } = useMutation({
         ],
       },
       sort: [{ _id: "asc" }],
-      limit: (2 ^ 32) - 1,
+      limit: POUCH_DB_MAX_LIMIT,
     });
 
     const logs = data.docs.map((doc) => ({

@@ -1,3 +1,5 @@
+import { POUCH_DB_MAX_LIMIT } from "~~/shared/db";
+
 export const useLogsQuery = (options: ComputedRef<{ customerName: string; projectName: string }>) => {
   const { $db } = useNuxtApp();
 
@@ -6,7 +8,7 @@ export const useLogsQuery = (options: ComputedRef<{ customerName: string; projec
     query: async () => {
       const logs = await $db.find({
         selector: { customerName: options.value.customerName, projectName: options.value.projectName },
-        limit: (2 ^ 32) - 1,
+        limit: POUCH_DB_MAX_LIMIT,
         sort: [{ _id: "desc" }],
       });
       return logs.docs;

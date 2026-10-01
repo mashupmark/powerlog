@@ -1,4 +1,4 @@
-import type { Log } from "~~/shared/db";
+import { POUCH_DB_MAX_LIMIT, type Log } from "~~/shared/db";
 
 export const useProjectsQuery = () => {
   const { $db } = useNuxtApp();
@@ -9,7 +9,7 @@ export const useProjectsQuery = () => {
       const logs = (await $db.find({
         fields: ["customerName", "projectName", "archived"],
         selector: { customerName: { $exists: true }, projectName: { $exists: true } },
-        limit: (2 ^ 32) - 1,
+        limit: POUCH_DB_MAX_LIMIT,
       })) as PouchDB.Find.FindResponse<Required<Pick<Log, "customerName" | "projectName" | "archived">>>;
 
       // Sorting within the query would require an extra index, so to save space sorting is done as computation

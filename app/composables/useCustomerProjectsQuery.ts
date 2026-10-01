@@ -1,4 +1,4 @@
-import type { Log } from "~~/shared/db";
+import { POUCH_DB_MAX_LIMIT, type Log } from "~~/shared/db";
 
 export const useCustomerProjectsQuery = (customer: MaybeRef<string | undefined>) => {
   const { $db } = useNuxtApp();
@@ -10,7 +10,7 @@ export const useCustomerProjectsQuery = (customer: MaybeRef<string | undefined>)
       const projects: PouchDB.Find.FindResponse<Pick<Log, "projectName">> = await $db.find({
         fields: ["projectName"],
         selector: { customerName: unref(customer), projectName: { $exists: true } },
-        limit: (2 ^ 32) - 1,
+        limit: POUCH_DB_MAX_LIMIT,
       });
       return Array.from(new Set(projects.docs.map(({ projectName }) => projectName!)));
     },

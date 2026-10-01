@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import type { Log } from "~~/shared/db";
+import { POUCH_DB_MAX_LIMIT, type Log } from "~~/shared/db";
 
 /**
  * Get the most recently used projects deduplicated by the combination of customer + project name
@@ -20,7 +20,7 @@ export const useRecentProjectsQuery = (options: { max: number }) => {
             projectName: { $exists: true },
           },
           sort: [{ _id: "desc" }],
-          limit: (2 ^ 32) - 1,
+          limit: POUCH_DB_MAX_LIMIT,
         });
 
       const deduplicatedProjects: (typeof response)["docs"] = [];
