@@ -6,7 +6,7 @@ export const useDB = () => {
   const { data: info } = useQuery({
     key: ["logs", "doc_count"],
     query: async (): Promise<Pick<PouchDB.Core.DatabaseInfo, "db_name" | "doc_count">> => await $db.info(),
-    initialData: () => ({ db_name: "logs", doc_count: 0 }),
+    placeholderData: () => ({ db_name: "logs", doc_count: 0 }),
   });
 
   /**
