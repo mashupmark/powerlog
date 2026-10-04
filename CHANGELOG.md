@@ -3,6 +3,7 @@
 ## v1.2.2
 
 - Sort customers and project dropdown options alphabetically
+- The location input is now a dropdown as well
 
 ## v1.2.1
 
