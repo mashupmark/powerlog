@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.2
+
+- Sort customers and project dropdown options alphabetically
+
 ## v1.2.1
 
 - Fix a bug where only up to 29 customers would be shown in the customer dropdown
