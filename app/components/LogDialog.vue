@@ -58,6 +58,12 @@ watch(customer, () => {
   if (customer.value === undefined) project.value = undefined;
 });
 
+const { data: locations } = useLocationsQuery();
+const locationOptions = computed(() => {
+  if (location.value && !locations.value?.includes(location.value)) return [...(locations.value ?? []), location.value];
+  return locations.value ?? [];
+});
+
 // Second version of the currently given time used for validation e.g. checking from is before to
 const timeAsInterval = computed(() => {
   if (!time.value) return undefined;
@@ -129,7 +135,13 @@ defineExpose({ open });
         sort
       />
 
-      <OnyxInput :label="t('location')" v-model.trim="location" />
+      <AutocompleteDropdown
+        v-model="location"
+        :label="t('location')"
+        :listLabel="t('location', 2)"
+        :options="locationOptions"
+        sort
+      />
 
       <OnyxTextarea :label="t('note', 2)" v-model.trim="notes" />
     </OnyxForm>
