@@ -4,6 +4,7 @@
 
 - Sort customers and project dropdown options alphabetically
 - The location input is now a dropdown as well
+- Minor dependency updates
 
 ## v1.2.1
 

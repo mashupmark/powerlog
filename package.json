@@ -31,12 +31,12 @@
     "vue-router": "5.3.1"
   },
   "devDependencies": {
-    "@types/luxon": "3.7.2",
+    "@types/luxon": "3.7.6",
     "@types/papaparse": "5.5.2",
     "@types/pouchdb": "6.4.2",
     "prettier": "3.9.9",
     "prettier-plugin-sort-json": "4.2.0",
-    "sass-embedded": "1.105.0",
+    "sass-embedded": "1.105.1",
     "typescript": "6.0.3",
     "vue-tsc": "3.3.11"
   },
