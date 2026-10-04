@@ -7,6 +7,8 @@ const props = defineProps<{
   modelValue?: string;
   options: string[];
   required?: boolean;
+  /** Sort the dropdowns options alphabetically  */
+  sort?: boolean;
 }>();
 
 const emit = defineEmits<{ "update:modelValue": [string | undefined] }>();
@@ -17,6 +19,8 @@ const options = computed(() => {
   const filteredOptions = props.options
     .filter((option) => option.toLowerCase().includes(search.value.toLowerCase()))
     .map((value) => ({ value, label: value }));
+
+  if (props.sort === true) filteredOptions.sort((a, b) => a.label.localeCompare(b.label));
 
   // Display option to create the new value if there isn't already an exact match
   if (search.value.trim().length > 0 && !filteredOptions.some((option) => option.value === search.value)) {

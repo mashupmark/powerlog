@@ -117,6 +117,7 @@ defineExpose({ open });
         :label="t('customer')"
         :listLabel="t('customer', 2)"
         :options="customerOptions"
+        sort
       />
       <AutocompleteDropdown
         v-if="customer"
@@ -125,6 +126,7 @@ defineExpose({ open });
         :listLabel="t('project', 2)"
         :options="projectOptions"
         :required="!!customer"
+        sort
       />
 
       <OnyxInput :label="t('location')" v-model.trim="location" />
